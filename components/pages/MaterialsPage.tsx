@@ -586,7 +586,7 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
             </button>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-6">
             {filteredMaterials.map((material) => {
               const progressPercent = material.totalItems > 0
                 ? Math.round((material.progress / material.totalItems) * 100)
@@ -599,62 +599,35 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
                     setSelectedMaterial(material);
                     setViewMode('detail');
                   }}
-                  className="w-full bg-cardBgSoft rounded-2xl p-3 border border-amber-100 text-left card-hover"
+                  className="text-left"
                 >
-                  <div className="flex items-center gap-3">
-                    {/* 封面圖片 */}
-                    <div className="w-14 h-18 bg-white rounded-lg overflow-hidden flex-shrink-0 shadow-sm">
-                      {material.coverImage ? (
-                        <img
-                          src={material.coverImage}
-                          alt={material.name}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-accent/10">
-                          {materialIcons[material.id] || materialIcons.default}
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-bold text-textMain truncate">
-                          {material.shortName || material.name}
-                        </h3>
-                        {material.isPrebuilt && (
-                          <span className="flex items-center gap-0.5 text-xs bg-accent/10 text-accent px-1.5 py-0.5 rounded-full">
-                            <Sparkles size={10} />
-                            AI
-                          </span>
-                        )}
+                  {/* 封面圖片 - 自然比例 */}
+                  <div className="mb-2">
+                    {material.coverImage ? (
+                      <img
+                        src={material.coverImage}
+                        alt={material.name}
+                        className="w-full h-auto rounded-lg"
+                      />
+                    ) : (
+                      <div className="aspect-square flex items-center justify-center">
+                        <Book size={64} className="text-accent/40" />
                       </div>
-                      <p className="text-xs text-textSub mt-0.5">
-                        {material.ageRange} · {material.totalItems === 1 ? '單本' : `${material.totalItems}本`}
-                      </p>
-
-                      {/* 套書：進度條 / 單本書：閱讀次數 */}
-                      {material.totalItems > 1 ? (
-                        <div className="mt-2">
-                          <div className="flex justify-between text-xs text-textSub mb-1">
-                            <span>學習進度</span>
-                            <span>{material.progress}/{material.totalItems}</span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-1.5">
-                            <div
-                              className="bg-accent rounded-full h-1.5 transition-all"
-                              style={{ width: `${progressPercent}%` }}
-                            />
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="mt-2 flex items-center gap-2">
-                          <span className="text-xs text-textSub">已讀</span>
-                          <span className="text-sm font-semibold text-accent">{material.readCount} 次</span>
-                        </div>
-                      )}
-                    </div>
-                    <ChevronRight size={20} className="text-textSub" />
+                    )}
                   </div>
+
+                  {/* 標題 */}
+                  <h3 className="font-medium text-textMain text-sm text-center leading-tight line-clamp-1">
+                    {material.shortName || material.name}
+                  </h3>
+
+                  {/* 進度指示 - 統一格式 */}
+                  <p className="text-xs text-textSub text-center mt-0.5">
+                    {material.totalItems > 1
+                      ? `${material.progress}/${material.totalItems}`
+                      : `已讀 ${material.readCount} 次`
+                    }
+                  </p>
                 </button>
               );
             })}
