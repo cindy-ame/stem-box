@@ -87,7 +87,7 @@ const ageOptions = [
 // 常用主題標籤
 const commonTags = ['動物', '顏色', '數字', '形狀', '食物', '交通', '家庭', '自然', '身體', '情緒'];
 
-type ViewMode = 'library' | 'addChoice' | 'addPrebuilt' | 'addCustom' | 'addByPhoto' | 'detail';
+type ViewMode = 'library' | 'addChoice' | 'addPrebuilt' | 'addCustom' | 'addByPhoto' | 'detail' | 'bookList';
 
 interface UserMaterial {
   id: string;
@@ -102,6 +102,7 @@ interface UserMaterial {
   isPrebuilt: boolean;
   progress: number; // 套書：已學習本數
   readCount: number; // 單本書：閱讀次數
+  coverImage?: string; // 封面圖片路徑
 }
 
 // 篩選用的分類選項
@@ -148,11 +149,12 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
       categories: ['language'],
       subCategory: 'english',
       ageRange: '2-6歲',
-      tags: ['Sight Words', '句型'],
+      tags: ['常見字', '句型'],
       notes: '',
       isPrebuilt: true,
       progress: 12,
       readCount: 0,
+      coverImage: '/covers/jysw.avif',
     },
     {
       id: 'sample_single',
@@ -166,6 +168,7 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
       isPrebuilt: false,
       progress: 0,
       readCount: 5,
+      coverImage: '/covers/brown.webp',
     },
   ]);
 
@@ -596,11 +599,22 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
                     setSelectedMaterial(material);
                     setViewMode('detail');
                   }}
-                  className="w-full bg-cardBgSoft rounded-2xl p-4 border border-amber-100 text-left card-hover"
+                  className="w-full bg-cardBgSoft rounded-2xl p-3 border border-amber-100 text-left card-hover"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
-                      {materialIcons[material.id] || materialIcons.default}
+                  <div className="flex items-center gap-3">
+                    {/* 封面圖片 */}
+                    <div className="w-14 h-18 bg-white rounded-lg overflow-hidden flex-shrink-0 shadow-sm">
+                      {material.coverImage ? (
+                        <img
+                          src={material.coverImage}
+                          alt={material.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-accent/10">
+                          {materialIcons[material.id] || materialIcons.default}
+                        </div>
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
@@ -1150,13 +1164,24 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
         <div className="p-4">
           {/* 教材資訊卡 */}
           <div className="bg-cardBgSoft rounded-2xl p-4 border border-amber-100 mb-4">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-14 h-14 bg-white rounded-xl flex items-center justify-center">
-                {materialIcons[selectedMaterial.id] || materialIcons.default}
+            <div className="flex items-start gap-4 mb-4">
+              {/* 封面圖片 */}
+              <div className="w-20 h-28 bg-white rounded-xl overflow-hidden flex-shrink-0 shadow-md">
+                {selectedMaterial.coverImage ? (
+                  <img
+                    src={selectedMaterial.coverImage}
+                    alt={selectedMaterial.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-accent/10">
+                    {materialIcons[selectedMaterial.id] || materialIcons.default}
+                  </div>
+                )}
               </div>
-              <div>
-                <h2 className="font-bold text-textMain text-lg">{selectedMaterial.name}</h2>
-                <p className="text-sm text-textSub">
+              <div className="flex-1 pt-1">
+                <h2 className="font-bold text-textMain text-base leading-tight">{selectedMaterial.name}</h2>
+                <p className="text-sm text-textSub mt-1">
                   {selectedMaterial.ageRange} · {selectedMaterial.totalItems === 1 ? '單本' : `${selectedMaterial.totalItems}本`}
                 </p>
               </div>
@@ -1202,21 +1227,16 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
 
           {/* AI 功能提示 */}
           {selectedMaterial.isPrebuilt ? (
-            <div className="bg-purple-50 rounded-xl p-4 border border-purple-100 mb-4">
-              <div className="flex items-start gap-2">
-                <Sparkles className="text-accent flex-shrink-0 mt-0.5" size={18} />
-                <div>
-                  <p className="text-sm font-medium text-purple-800 mb-1">AI 功能可用</p>
-                  <p className="text-xs text-purple-600">
-                    此教材支援 AI 配對建議、自動產生週計劃等功能。
-                  </p>
-                </div>
-              </div>
+            <div className="flex items-center gap-1.5 mb-4 px-1">
+              <Sparkles className="text-accent" size={12} />
+              <p className="text-xs text-textSub">
+                支援 AI 配對建議、自動產生週計劃
+              </p>
             </div>
           ) : (
-            <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 mb-4">
-              <p className="text-sm text-textSub">
-                自訂教材目前提供基本追蹤功能。未來可升級享有 AI 分析。
+            <div className="flex items-center gap-1.5 mb-4 px-1">
+              <p className="text-xs text-textSub">
+                自訂教材，提供基本追蹤功能
               </p>
             </div>
           )}
@@ -1224,7 +1244,10 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
           {/* 操作按鈕 */}
           <div className="space-y-2">
             {selectedMaterial.totalItems > 1 && (
-              <button className="w-full py-3 bg-accent text-white rounded-xl font-medium">
+              <button
+                onClick={() => setViewMode('bookList')}
+                className="w-full py-3 bg-accent text-white rounded-xl font-medium"
+              >
                 查看書目列表
               </button>
             )}
@@ -1235,6 +1258,80 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
               從書架移除
             </button>
           </div>
+        </div>
+      </div>
+    );
+  };
+
+  // 範例書目資料（之後可從 JSON 檔案載入）
+  const sampleBooks = [
+    { id: 1, title: 'We See', completed: true },
+    { id: 2, title: 'We Can', completed: true },
+    { id: 3, title: 'I See', completed: true },
+    { id: 4, title: 'Can You?', completed: false },
+    { id: 5, title: 'Look at Me', completed: false },
+    { id: 6, title: 'What Do You See?', completed: false },
+    { id: 7, title: 'I Like', completed: false },
+    { id: 8, title: 'We Like', completed: false },
+  ];
+
+  // 渲染書目列表
+  const renderBookList = () => {
+    if (!selectedMaterial) return null;
+
+    return (
+      <div className="pb-20 bg-white">
+        <div className="bg-white sticky top-0 z-10 border-b border-gray-100">
+          <div className="flex items-center p-4">
+            <button onClick={() => setViewMode('detail')} className="mr-3 p-1 -ml-1 rounded-lg hover:bg-gray-100">
+              <ChevronLeft size={24} className="text-textMain" />
+            </button>
+            <div>
+              <h1 className="text-lg font-bold text-textMain">{selectedMaterial.shortName || selectedMaterial.name}</h1>
+              <p className="text-xs text-textSub">{selectedMaterial.progress}/{selectedMaterial.totalItems} 本已完成</p>
+            </div>
+          </div>
+        </div>
+
+        {/* 書目網格 */}
+        <div className="p-4">
+          <div className="grid grid-cols-3 gap-3">
+            {sampleBooks.map((book) => (
+              <div
+                key={book.id}
+                className={`relative rounded-xl overflow-hidden border-2 ${
+                  book.completed ? 'border-accent' : 'border-gray-200'
+                }`}
+              >
+                {/* 書籍封面佔位 */}
+                <div className="aspect-[3/4] bg-gradient-to-br from-amber-50 to-amber-100 flex items-center justify-center">
+                  <div className="text-center px-2">
+                    <Book size={24} className="text-accent/40 mx-auto mb-1" />
+                    <p className="text-xs text-textSub font-medium leading-tight">{book.title}</p>
+                  </div>
+                </div>
+
+                {/* 完成標記 */}
+                {book.completed && (
+                  <div className="absolute top-1 right-1 w-5 h-5 bg-accent rounded-full flex items-center justify-center">
+                    <Check size={12} className="text-white" />
+                  </div>
+                )}
+
+                {/* 書籍編號 */}
+                <div className="absolute bottom-1 left-1 bg-black/50 text-white text-xs px-1.5 py-0.5 rounded">
+                  #{book.id}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* 載入更多提示 */}
+          {selectedMaterial.totalItems > sampleBooks.length && (
+            <p className="text-center text-xs text-textSub mt-4">
+              顯示 {sampleBooks.length} / {selectedMaterial.totalItems} 本
+            </p>
+          )}
         </div>
       </div>
     );
@@ -1254,6 +1351,8 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
       return renderAddCustom();
     case 'detail':
       return renderDetail();
+    case 'bookList':
+      return renderBookList();
     default:
       return renderLibrary();
   }
