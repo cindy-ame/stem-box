@@ -1135,20 +1135,20 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
         </div>
 
         <div className="p-4">
-          {/* 教材資訊卡 */}
-          <div className="bg-cardBgSoft rounded-2xl p-4 border border-amber-100 mb-4">
+          {/* 教材資訊 */}
+          <div className="mb-4">
             <div className="flex items-start gap-4 mb-4">
-              {/* 封面圖片 */}
-              <div className="w-20 h-28 bg-white rounded-xl overflow-hidden flex-shrink-0 shadow-md">
+              {/* 封面圖片 - 自然比例 */}
+              <div className="w-24 flex-shrink-0">
                 {selectedMaterial.coverImage ? (
                   <img
                     src={selectedMaterial.coverImage}
                     alt={selectedMaterial.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-auto rounded-lg"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-accent/10">
-                    {materialIcons[selectedMaterial.id] || materialIcons.default}
+                  <div className="aspect-square flex items-center justify-center">
+                    <Book size={48} className="text-accent/40" />
                   </div>
                 )}
               </div>
@@ -1160,31 +1160,28 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
               </div>
             </div>
 
-            {/* 套書：進度條 / 單本書：閱讀次數 + 加一按鈕 */}
-            {selectedMaterial.totalItems > 1 ? (
-              <div className="mb-4">
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="text-textSub">學習進度</span>
-                  <span className="font-medium text-textMain">{selectedMaterial.progress}/{selectedMaterial.totalItems}</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div
-                    className="bg-accent rounded-full h-2"
-                    style={{ width: `${(selectedMaterial.progress / selectedMaterial.totalItems) * 100}%` }}
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="mb-4 bg-white rounded-xl p-4 border border-gray-100">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-textSub">閱讀次數</p>
-                    <p className="text-2xl font-bold text-accent">{selectedMaterial.readCount} 次</p>
+            {/* 進度顯示 - 統一格式 */}
+            <div className="mb-4">
+              {selectedMaterial.totalItems > 1 ? (
+                <>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="text-textSub">學習進度</span>
+                    <span className="font-medium text-textMain">{selectedMaterial.progress}/{selectedMaterial.totalItems}</span>
                   </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-accent rounded-full h-2"
+                      style={{ width: `${(selectedMaterial.progress / selectedMaterial.totalItems) * 100}%` }}
+                    />
+                  </div>
+                </>
+              ) : (
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="text-textSub">閱讀次數</span>
+                  <span className="font-medium text-accent">{selectedMaterial.readCount} 次</span>
                 </div>
-                <p className="text-xs text-textSub mt-2">透過每日打卡自動記錄</p>
-              </div>
-            )}
+              )}
+            </div>
 
             {/* 標籤 */}
             {selectedMaterial.tags.length > 0 && (
