@@ -1,0 +1,251 @@
+{
+  "version": "0.1",
+  "updated": "2026-01-31",
+
+  "entities": {
+
+    "User": {
+      "description": "使用者帳號",
+      "fields": {
+        "id": { "type": "string", "required": true, "description": "唯一識別碼" },
+        "email": { "type": "string", "required": true },
+        "displayName": { "type": "string", "required": false },
+        "createdAt": { "type": "timestamp", "required": true },
+        "lastLoginAt": { "type": "timestamp", "required": false }
+      }
+    },
+
+    "Child": {
+      "description": "孩子資料",
+      "fields": {
+        "id": { "type": "string", "required": true },
+        "userId": { "type": "string", "required": true, "ref": "User" },
+        "name": { "type": "string", "required": true, "description": "孩子姓名/暱稱" },
+        "birthDate": { "type": "date", "required": true, "description": "生日" },
+        "gender": { "type": "string", "enum": ["male", "female", "other"], "required": false },
+        "avatar": { "type": "string", "required": false, "description": "頭像 URL" },
+        "createdAt": { "type": "timestamp", "required": true }
+      },
+      "computed": {
+        "ageInMonths": "根據 birthDate 計算"
+      }
+    },
+
+    "LearningGoal": {
+      "description": "學習目標設定",
+      "fields": {
+        "id": { "type": "string", "required": true },
+        "childId": { "type": "string", "required": true, "ref": "Child" },
+        "category": { "type": "string", "enum": ["english", "chinese", "math", "art", "music", "other"], "required": true },
+        "description": { "type": "string", "required": true },
+        "targetDate": { "type": "date", "required": false },
+        "status": { "type": "string", "enum": ["active", "achieved", "paused"], "default": "active" },
+        "createdAt": { "type": "timestamp", "required": true }
+      }
+    },
+
+    "Material": {
+      "description": "教材（預建 + 使用者自訂）",
+      "fields": {
+        "id": { "type": "string", "required": true },
+        "name": { "type": "string", "required": true, "description": "教材名稱，如 JY Sight Word Readers" },
+        "shortName": { "type": "string", "required": false, "description": "簡稱，如 JYSW" },
+        "type": { "type": "string", "enum": ["book_set", "single_book", "audio", "video", "toy", "flashcard", "other"], "required": true },
+        "category": { "type": "string", "enum": ["english", "chinese", "math", "art", "music", "other"], "required": true },
+        "ageRangeMin": { "type": "number", "description": "適用最小年齡（月）" },
+        "ageRangeMax": { "type": "number", "description": "適用最大年齡（月）" },
+        "publisher": { "type": "string", "required": false },
+        "description": { "type": "string", "required": false },
+        "coverImage": { "type": "string", "required": false },
+        "isBuiltIn": { "type": "boolean", "default": true, "description": "是否為預建教材" },
+        "createdBy": { "type": "string", "ref": "User", "description": "若為使用者自訂，記錄建立者" },
+        "verifiedAt": { "type": "timestamp", "description": "驗證時間（多人確認後）" },
+        "createdAt": { "type": "timestamp", "required": true }
+      }
+    },
+
+    "MaterialItem": {
+      "description": "教材中的單一項目（如單本書）",
+      "fields": {
+        "id": { "type": "string", "required": true },
+        "materialId": { "type": "string", "required": true, "ref": "Material" },
+        "itemNumber": { "type": "number", "required": true, "description": "編號，如第幾本" },
+        "title": { "type": "string", "required": true, "description": "標題，如 Animals on the Farm" },
+        "theme": { "type": "string", "required": false, "description": "主題，如 Animals" },
+        "sightWords": { "type": "array", "items": "string", "description": "Sight Words 列表" },
+        "sentencePattern": { "type": "string", "description": "句型，如 We see some ___." },
+        "vocabularyWords": { "type": "array", "items": "string", "description": "圖像單字列表" },
+        "phonicsSound": { "type": "string", "description": "Phonics 發音，如 Ss, Ll" },
+        "mainSentence": { "type": "string", "description": "主句" },
+        "notes": { "type": "string", "description": "其他備註" }
+      }
+    },
+
+    "UserMaterial": {
+      "description": "使用者擁有的教材",
+      "fields": {
+        "id": { "type": "string", "required": true },
+        "userId": { "type": "string", "required": true, "ref": "User" },
+        "materialId": { "type": "string", "required": true, "ref": "Material" },
+        "ownedItems": { "type": "array", "items": "string", "description": "擁有的項目 ID 列表（若只有部分）" },
+        "ownsAll": { "type": "boolean", "default": true, "description": "是否擁有全套" },
+        "acquiredAt": { "type": "date", "description": "取得日期" },
+        "notes": { "type": "string" },
+        "createdAt": { "type": "timestamp", "required": true }
+      }
+    },
+
+    "MaterialPairing": {
+      "description": "教材配對規則",
+      "fields": {
+        "id": { "type": "string", "required": true },
+        "primaryItemId": { "type": "string", "required": true, "ref": "MaterialItem", "description": "主教材項目" },
+        "pairedItemId": { "type": "string", "required": true, "ref": "MaterialItem", "description": "配對教材項目" },
+        "pairingType": { "type": "string", "enum": ["sentence_pattern", "theme", "vocabulary_overlap", "phonics"], "required": true },
+        "pairingReason": { "type": "string", "description": "配對原因說明" },
+        "overlapWords": { "type": "array", "items": "string", "description": "重疊單字" }
+      }
+    },
+
+    "LearningPlan": {
+      "description": "學習計劃",
+      "fields": {
+        "id": { "type": "string", "required": true },
+        "userId": { "type": "string", "required": true, "ref": "User" },
+        "childId": { "type": "string", "required": true, "ref": "Child" },
+        "name": { "type": "string", "required": true, "description": "計劃名稱" },
+        "startDate": { "type": "date", "required": true },
+        "endDate": { "type": "date", "required": false },
+        "status": { "type": "string", "enum": ["active", "paused", "completed"], "default": "active" },
+        "generatedByAI": { "type": "boolean", "default": true },
+        "createdAt": { "type": "timestamp", "required": true }
+      }
+    },
+
+    "WeekPlan": {
+      "description": "週計劃",
+      "fields": {
+        "id": { "type": "string", "required": true },
+        "learningPlanId": { "type": "string", "required": true, "ref": "LearningPlan" },
+        "weekNumber": { "type": "number", "required": true },
+        "startDate": { "type": "date", "required": true },
+        "endDate": { "type": "date", "required": true },
+        "themes": { "type": "array", "items": "object", "description": "本週主題列表" },
+        "primaryMaterials": { "type": "array", "items": "string", "ref": "MaterialItem", "description": "主教材項目 ID" },
+        "supportMaterials": { "type": "array", "items": "string", "ref": "MaterialItem", "description": "輔助教材項目 ID" },
+        "sightWordsGoal": { "type": "array", "items": "string", "description": "本週 Sight Words 目標" },
+        "sentencePatternsGoal": { "type": "array", "items": "string", "description": "本週句型目標" },
+        "aiNotes": { "type": "string", "description": "AI 產生的週計劃說明" }
+      }
+    },
+
+    "DayPlan": {
+      "description": "日計劃",
+      "fields": {
+        "id": { "type": "string", "required": true },
+        "weekPlanId": { "type": "string", "required": true, "ref": "WeekPlan" },
+        "date": { "type": "date", "required": true },
+        "dayOfWeek": { "type": "number", "min": 1, "max": 7 },
+        "tasks": { "type": "array", "items": "DayTask" },
+        "aiTips": { "type": "string", "description": "AI 每日小提示" }
+      }
+    },
+
+    "DayTask": {
+      "description": "每日任務",
+      "fields": {
+        "id": { "type": "string", "required": true },
+        "dayPlanId": { "type": "string", "required": true, "ref": "DayPlan" },
+        "taskType": { "type": "string", "enum": ["read", "listen", "play", "review", "activity"], "required": true },
+        "materialItemId": { "type": "string", "ref": "MaterialItem" },
+        "title": { "type": "string", "required": true, "description": "任務標題" },
+        "description": { "type": "string", "description": "任務說明" },
+        "duration": { "type": "number", "description": "建議時長（分鐘）" },
+        "timeSlot": { "type": "string", "enum": ["morning", "afternoon", "evening", "anytime"], "default": "anytime" },
+        "interactionTips": { "type": "string", "description": "互動建議" },
+        "order": { "type": "number", "description": "排序" }
+      }
+    },
+
+    "CheckIn": {
+      "description": "打卡紀錄",
+      "fields": {
+        "id": { "type": "string", "required": true },
+        "userId": { "type": "string", "required": true, "ref": "User" },
+        "childId": { "type": "string", "required": true, "ref": "Child" },
+        "dayPlanId": { "type": "string", "ref": "DayPlan" },
+        "date": { "type": "date", "required": true },
+        "completedTasks": { "type": "array", "items": "string", "description": "完成的任務 ID" },
+        "photos": { "type": "array", "items": "string", "description": "照片 URL 列表" },
+        "videos": { "type": "array", "items": "string", "description": "影片 URL 列表" },
+        "journalEntry": { "type": "string", "description": "學習日記/觀察紀錄" },
+        "mood": { "type": "string", "enum": ["great", "good", "okay", "difficult"], "description": "孩子今天的狀態" },
+        "createdAt": { "type": "timestamp", "required": true }
+      }
+    },
+
+    "AIFeedback": {
+      "description": "AI 回饋",
+      "fields": {
+        "id": { "type": "string", "required": true },
+        "checkInId": { "type": "string", "required": true, "ref": "CheckIn" },
+        "feedbackType": { "type": "string", "enum": ["instant", "weekly", "milestone"], "required": true },
+        "content": { "type": "string", "required": true, "description": "AI 回饋內容" },
+        "suggestions": { "type": "array", "items": "string", "description": "建議列表" },
+        "encouragement": { "type": "string", "description": "鼓勵語" },
+        "nextSteps": { "type": "string", "description": "下一步建議" },
+        "createdAt": { "type": "timestamp", "required": true }
+      }
+    },
+
+    "Game": {
+      "description": "遊戲點子",
+      "fields": {
+        "id": { "type": "string", "required": true },
+        "title": { "type": "string", "required": true },
+        "description": { "type": "string", "required": true },
+        "category": { "type": "string", "enum": ["language", "math", "sensory", "art", "music", "movement", "other"], "required": true },
+        "ageRangeMin": { "type": "number" },
+        "ageRangeMax": { "type": "number" },
+        "duration": { "type": "number", "description": "預計時長（分鐘）" },
+        "materialsNeeded": { "type": "array", "items": "string", "description": "所需材料" },
+        "steps": { "type": "array", "items": "string", "description": "步驟說明" },
+        "tips": { "type": "string", "description": "小技巧" },
+        "relatedSightWords": { "type": "array", "items": "string", "description": "相關 Sight Words" },
+        "relatedMaterialItems": { "type": "array", "items": "string", "ref": "MaterialItem" },
+        "coverImage": { "type": "string" },
+        "isBuiltIn": { "type": "boolean", "default": true },
+        "createdBy": { "type": "string", "ref": "User" },
+        "createdAt": { "type": "timestamp", "required": true }
+      }
+    },
+
+    "Article": {
+      "description": "腦科學知識文章",
+      "fields": {
+        "id": { "type": "string", "required": true },
+        "title": { "type": "string", "required": true },
+        "category": { "type": "string", "enum": ["brain_development", "learning_method", "myth_busting", "age_guide", "tips"], "required": true },
+        "content": { "type": "string", "required": true },
+        "summary": { "type": "string", "description": "摘要" },
+        "ageRelevance": { "type": "array", "items": "string", "description": "適用年齡段" },
+        "tags": { "type": "array", "items": "string" },
+        "coverImage": { "type": "string" },
+        "readTime": { "type": "number", "description": "閱讀時間（分鐘）" },
+        "publishedAt": { "type": "timestamp" },
+        "createdAt": { "type": "timestamp", "required": true }
+      }
+    },
+
+    "Favorite": {
+      "description": "使用者收藏",
+      "fields": {
+        "id": { "type": "string", "required": true },
+        "userId": { "type": "string", "required": true, "ref": "User" },
+        "itemType": { "type": "string", "enum": ["game", "article", "material"], "required": true },
+        "itemId": { "type": "string", "required": true },
+        "createdAt": { "type": "timestamp", "required": true }
+      }
+    }
+  }
+}

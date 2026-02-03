@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 防止自動切換深色模式 */
+:root {
+  color-scheme: light only;
+}
+
+html, body {
+  background-color: #FAF5E6;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
+/* Nini App 風格 - 溫暖柔和 */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 自定義滾動條 */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FAF5E6;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E8DFD0;
+  border-radius: 4px;
+}
+
+/* 卡片動畫 */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(58, 45, 38, 0.1);
+}
+
+.card-hover:active {
+  transform: translateY(0);
+}
+
+/* 打卡完成動畫 */
+@keyframes checkmark {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.animate-checkmark {
+  animation: checkmark 0.3s ease-out;
+}
+
+/* 按鈕按壓效果 */
+.btn-press:active {
+  transform: scale(0.97);
+}

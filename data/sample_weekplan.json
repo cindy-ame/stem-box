@@ -1,0 +1,270 @@
+{
+  "weekPlan": {
+    "id": "wp_sample_001",
+    "learningPlanId": "lp_001",
+    "weekNumber": 1,
+    "startDate": "2026-02-03",
+    "endDate": "2026-02-09",
+    "themes": [
+      { "name": "農場動物", "english": "Farm Animals" },
+      { "name": "形狀", "english": "Shapes" }
+    ],
+    "primaryMaterials": ["jysw_10", "jysw_14"],
+    "supportMaterials": ["flr_8", "flr_13"],
+    "backgroundMaterials": ["jpr_3", "jpr_8", "jpr_16", "jpr_19"],
+    "sightWordsGoal": ["we", "see", "some", "can", "you", "the"],
+    "sentencePatternsGoal": ["We see some ___.", "Can you see the ___?"],
+    "aiNotes": "這週結合動物與形狀兩個主題。動物主題能讓孩子練習指認和命名，形狀主題則可融入日常生活觀察。建議家長在共讀時多問「Where are the ___?」引導孩子參與。"
+  },
+
+  "dayPlans": [
+    {
+      "id": "dp_001",
+      "weekPlanId": "wp_sample_001",
+      "date": "2026-02-03",
+      "dayOfWeek": 1,
+      "tasks": [
+        {
+          "id": "dt_001",
+          "taskType": "read",
+          "materialItemId": "jysw_10",
+          "title": "共讀《Animals on the Farm》",
+          "description": "今天開始農場動物主題！一起認識 chickens, cows, horses, pigs, sheep。",
+          "duration": 10,
+          "timeSlot": "anytime",
+          "interactionTips": "指著每種動物問「Do we see some ___?」讓孩子跟著說 \"We see some chickens!\"",
+          "order": 1
+        },
+        {
+          "id": "dt_002",
+          "taskType": "listen",
+          "materialItemId": "jpr_3",
+          "title": "播放 JPR Cc",
+          "description": "背景播放 Cc - Cows，強化 C 的發音和 cows 單字。",
+          "duration": 5,
+          "timeSlot": "anytime",
+          "order": 2
+        }
+      ],
+      "aiTips": "第一天先建立熟悉感，不用急著讓孩子完美說出句子。重複播放、開心互動最重要！"
+    },
+    {
+      "id": "dp_002",
+      "weekPlanId": "wp_sample_001",
+      "date": "2026-02-04",
+      "dayOfWeek": 2,
+      "tasks": [
+        {
+          "id": "dt_003",
+          "taskType": "read",
+          "materialItemId": "jysw_10",
+          "title": "再讀《Animals on the Farm》",
+          "description": "第二次共讀，讓孩子更熟悉 \"We see some\" 句型。",
+          "duration": 10,
+          "timeSlot": "anytime",
+          "interactionTips": "這次可以讓孩子幫忙翻頁，或在你說 \"We see some...\" 時停下來讓孩子接。",
+          "order": 1
+        },
+        {
+          "id": "dt_004",
+          "taskType": "read",
+          "materialItemId": "flr_8",
+          "title": "配對書《What Can I See?》",
+          "description": "FLR 的 \"I see a ___\" 和 JYSW 的 \"We see some\" 相呼應。",
+          "duration": 8,
+          "timeSlot": "anytime",
+          "interactionTips": "比較兩本書：一個說 \"we\"，一個說 \"I\"。問孩子「這是誰在看？」",
+          "order": 2
+        },
+        {
+          "id": "dt_005",
+          "taskType": "listen",
+          "materialItemId": "jpr_8",
+          "title": "播放 JPR Hh",
+          "description": "Hh - Hen，和農場動物 chickens 相關。",
+          "duration": 5,
+          "timeSlot": "anytime",
+          "order": 3
+        }
+      ],
+      "aiTips": "今天加入配對書，孩子可能會注意到兩本書的相似處。這是很好的觀察力表現！"
+    },
+    {
+      "id": "dp_003",
+      "weekPlanId": "wp_sample_001",
+      "date": "2026-02-05",
+      "dayOfWeek": 3,
+      "tasks": [
+        {
+          "id": "dt_006",
+          "taskType": "read",
+          "materialItemId": "jysw_14",
+          "title": "共讀《Look at the Shapes》",
+          "description": "進入形狀主題！認識 circle, square, triangle。",
+          "duration": 10,
+          "timeSlot": "anytime",
+          "interactionTips": "問孩子「Can you see the circle?」讓他指出來。",
+          "order": 1
+        },
+        {
+          "id": "dt_007",
+          "taskType": "review",
+          "materialItemId": "jysw_10",
+          "title": "複習《Animals on the Farm》",
+          "description": "快速翻閱複習，維持熟悉感。",
+          "duration": 5,
+          "timeSlot": "anytime",
+          "order": 2
+        },
+        {
+          "id": "dt_008",
+          "taskType": "listen",
+          "materialItemId": "jpr_19",
+          "title": "播放 JPR Ss",
+          "description": "Ss - Sun，和 square 發音相關。",
+          "duration": 5,
+          "timeSlot": "anytime",
+          "order": 3
+        }
+      ],
+      "aiTips": "開始新主題時，舊主題也要持續複習。孩子需要重複才能內化！"
+    },
+    {
+      "id": "dp_004",
+      "weekPlanId": "wp_sample_001",
+      "date": "2026-02-06",
+      "dayOfWeek": 4,
+      "tasks": [
+        {
+          "id": "dt_009",
+          "taskType": "read",
+          "materialItemId": "jysw_14",
+          "title": "再讀《Look at the Shapes》",
+          "description": "第二次共讀形狀，強化 \"Can you see the ___?\" 句型。",
+          "duration": 10,
+          "timeSlot": "anytime",
+          "interactionTips": "在家裡找形狀！「Can you see the circle? Look, the clock!」",
+          "order": 1
+        },
+        {
+          "id": "dt_010",
+          "taskType": "read",
+          "materialItemId": "flr_13",
+          "title": "配對書《Shapes for Lunch》",
+          "description": "FLR 的形狀主題，用食物來認識形狀。",
+          "duration": 8,
+          "timeSlot": "anytime",
+          "interactionTips": "問孩子「What shape is the pizza?」",
+          "order": 2
+        },
+        {
+          "id": "dt_011",
+          "taskType": "play",
+          "title": "形狀捉迷藏",
+          "description": "在家裡找 circle, square, triangle。",
+          "duration": 10,
+          "timeSlot": "anytime",
+          "interactionTips": "把找到的形狀拍照，晚上一起回顧！",
+          "order": 3
+        }
+      ],
+      "aiTips": "今天有遊戲活動！遊戲中學習最有效，孩子會更投入。"
+    },
+    {
+      "id": "dp_005",
+      "weekPlanId": "wp_sample_001",
+      "date": "2026-02-07",
+      "dayOfWeek": 5,
+      "tasks": [
+        {
+          "id": "dt_012",
+          "taskType": "review",
+          "materialItemId": "jysw_10",
+          "title": "複習《Animals on the Farm》",
+          "description": "週五是複習日！",
+          "duration": 8,
+          "timeSlot": "anytime",
+          "order": 1
+        },
+        {
+          "id": "dt_013",
+          "taskType": "review",
+          "materialItemId": "jysw_14",
+          "title": "複習《Look at the Shapes》",
+          "description": "複習形狀主題。",
+          "duration": 8,
+          "timeSlot": "anytime",
+          "order": 2
+        },
+        {
+          "id": "dt_014",
+          "taskType": "listen",
+          "materialItemId": "jpr_16",
+          "title": "播放 JPR Pp",
+          "description": "Pp - Pig，複習農場動物的同時接觸 P 發音。",
+          "duration": 5,
+          "timeSlot": "anytime",
+          "order": 3
+        }
+      ],
+      "aiTips": "複習日不要有壓力，輕鬆翻閱就好。孩子願意看就是成功！"
+    },
+    {
+      "id": "dp_006",
+      "weekPlanId": "wp_sample_001",
+      "date": "2026-02-08",
+      "dayOfWeek": 6,
+      "tasks": [
+        {
+          "id": "dt_015",
+          "taskType": "play",
+          "title": "農場動物配對遊戲",
+          "description": "用動物玩偶或圖卡玩配對遊戲。",
+          "duration": 15,
+          "timeSlot": "anytime",
+          "interactionTips": "把動物藏起來，找到時說「We see some pigs!」",
+          "order": 1
+        },
+        {
+          "id": "dt_016",
+          "taskType": "activity",
+          "title": "形狀貼紙畫",
+          "description": "用形狀貼紙創作，邊貼邊說形狀名稱。",
+          "duration": 15,
+          "timeSlot": "anytime",
+          "order": 2
+        }
+      ],
+      "aiTips": "週末以遊戲為主！學習融入遊戲中，孩子不會覺得是在「上課」。"
+    },
+    {
+      "id": "dp_007",
+      "weekPlanId": "wp_sample_001",
+      "date": "2026-02-09",
+      "dayOfWeek": 7,
+      "tasks": [
+        {
+          "id": "dt_017",
+          "taskType": "activity",
+          "title": "自由選擇日",
+          "description": "讓孩子選想看的書，或想玩的遊戲。",
+          "duration": 15,
+          "timeSlot": "anytime",
+          "interactionTips": "觀察孩子自己選什麼，這反映他的興趣！",
+          "order": 1
+        }
+      ],
+      "aiTips": "週日彈性安排。如果這週執行得很累，今天可以完全休息。學習是馬拉松，不是短跑！"
+    }
+  ],
+
+  "summary": {
+    "totalReadingTasks": 8,
+    "totalListeningTasks": 4,
+    "totalPlayTasks": 2,
+    "totalReviewTasks": 4,
+    "totalActivityTasks": 3,
+    "estimatedTotalMinutes": 155,
+    "averageMinutesPerDay": 22
+  }
+}

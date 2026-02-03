@@ -1,0 +1,284 @@
+{
+  "version": "0.1",
+  "updated": "2026-01-31",
+  "description": "JYSW 與 FLR、JPR 的配對規則",
+
+  "jysw_flr_pairings": [
+    {
+      "jysw": { "itemNumber": 1, "title": "I Am Active", "sentencePattern": "I am ___." },
+      "flr": [
+        { "itemNumber": 4, "title": "Fun at the Playground", "reason": "動作主題相關", "type": "theme" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 2, "title": "At Grandma's House", "sentencePattern": "We had ___." },
+      "flr": [
+        { "itemNumber": 5, "title": "Birthday Surprise", "reason": "I have 句型相似", "type": "sentence_pattern" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 3, "title": "Count on Me", "sentencePattern": "She has ___." },
+      "flr": [
+        { "itemNumber": 2, "title": "Cold Rose", "reason": "身體部位主題 (toes, nose)", "type": "theme", "overlapWords": ["nose", "toes"] }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 4, "title": "I Like the Spring!", "sentencePattern": "I like the ___." },
+      "flr": [
+        { "itemNumber": 6, "title": "What is for Supper?", "reason": "I like 句型", "type": "sentence_pattern" },
+        { "itemNumber": 24, "title": "Almost Spring", "reason": "春天主題", "type": "theme" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 5, "title": "What Has Stripes?", "sentencePattern": "The ___ has ___." },
+      "flr": [
+        { "itemNumber": 25, "title": "I Like Stripes", "reason": "條紋主題", "type": "theme", "overlapWords": ["zebra", "stripes"] }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 6, "title": "We Like Birthdays", "sentencePattern": "We like the ___." },
+      "flr": [
+        { "itemNumber": 5, "title": "Birthday Surprise", "reason": "生日主題", "type": "theme" },
+        { "itemNumber": 6, "title": "What is for Supper?", "reason": "I like 句型", "type": "sentence_pattern" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 7, "title": "We Have Fruit", "sentencePattern": "We have ___." },
+      "flr": [
+        { "itemNumber": 5, "title": "Birthday Surprise", "reason": "I have 句型相似", "type": "sentence_pattern" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 8, "title": "My Home", "sentencePattern": "Look at my ___." },
+      "flr": [
+        { "itemNumber": 9, "title": "What Do I Need?", "reason": "家居用品主題", "type": "theme" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 9, "title": "Animal Babies", "sentencePattern": "I play with ___." },
+      "flr": [
+        { "itemNumber": 20, "title": "Class Pets", "reason": "動物主題", "type": "theme", "overlapWords": ["rabbit"] }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 10, "title": "Animals on the Farm", "sentencePattern": "We see some ___." },
+      "flr": [
+        { "itemNumber": 8, "title": "What Can I See?", "reason": "see 句型", "type": "sentence_pattern" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 11, "title": "Count Around the Room", "sentencePattern": "He has ___." },
+      "flr": [
+        { "itemNumber": 5, "title": "Birthday Surprise", "reason": "I have 句型相似", "type": "sentence_pattern" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 12, "title": "Jobs Around Town", "sentencePattern": "We are ___." },
+      "flr": [
+        { "itemNumber": 7, "title": "I Like School", "reason": "社區/學校主題", "type": "theme" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 13, "title": "In the Band", "sentencePattern": "Look at the ___." },
+      "flr": [
+        { "itemNumber": 8, "title": "What Can I See?", "reason": "look/see 句型", "type": "sentence_pattern" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 14, "title": "Look at the Shapes", "sentencePattern": "Can you see the ___?" },
+      "flr": [
+        { "itemNumber": 13, "title": "Shapes for Lunch", "reason": "形狀主題", "type": "theme", "overlapWords": ["circle", "square", "triangle"] },
+        { "itemNumber": 8, "title": "What Can I See?", "reason": "see 句型", "type": "sentence_pattern" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 15, "title": "I Go!", "sentencePattern": "I go in a ___." },
+      "flr": [
+        { "itemNumber": 4, "title": "Fun at the Playground", "reason": "I go 句型", "type": "sentence_pattern" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 18, "title": "At the Shore", "sentencePattern": "We look at the ___." },
+      "flr": [
+        { "itemNumber": 3, "title": "Hello, Beach", "reason": "海灘主題", "type": "theme", "overlapWords": ["crab", "whale"] }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 19, "title": "My Pet", "sentencePattern": "My ___ likes me." },
+      "flr": [
+        { "itemNumber": 20, "title": "Class Pets", "reason": "寵物主題", "type": "theme" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 21, "title": "What Goes Up?", "sentencePattern": "That ___ goes up." },
+      "flr": [
+        { "itemNumber": 4, "title": "Fun at the Playground", "reason": "up/down 概念", "type": "theme", "overlapWords": ["up", "down"] }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 24, "title": "Look at the Weather", "sentencePattern": "I can see the ___." },
+      "flr": [
+        { "itemNumber": 24, "title": "Almost Spring", "reason": "天氣/季節主題", "type": "theme", "overlapWords": ["sun"] },
+        { "itemNumber": 10, "title": "What Shines?", "reason": "太陽相關", "type": "theme", "overlapWords": ["sun"] }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 28, "title": "My Family", "sentencePattern": "This is my ___." },
+      "flr": [
+        { "itemNumber": 9, "title": "What Do I Need?", "reason": "家庭/家居主題", "type": "theme" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 29, "title": "Finding Shapes With Dad", "sentencePattern": "Dad said, \"See the ___.\"" },
+      "flr": [
+        { "itemNumber": 13, "title": "Shapes for Lunch", "reason": "形狀主題", "type": "theme", "overlapWords": ["circle", "square", "triangle"] }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 30, "title": "Look at the Sky", "sentencePattern": "You can see the ___." },
+      "flr": [
+        { "itemNumber": 10, "title": "What Shines?", "reason": "天空/光亮主題", "type": "theme", "overlapWords": ["sun", "moon"] }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 31, "title": "I Like to Play Sports", "sentencePattern": "I like to play ___." },
+      "flr": [
+        { "itemNumber": 7, "title": "I Like School", "reason": "I like to 句型", "type": "sentence_pattern" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 36, "title": "We Go to School", "sentencePattern": "We go to the ___." },
+      "flr": [
+        { "itemNumber": 7, "title": "I Like School", "reason": "學校主題", "type": "theme", "overlapWords": ["school"] }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 37, "title": "See the Birds", "sentencePattern": "Do you see the ___?" },
+      "flr": [
+        { "itemNumber": 8, "title": "What Can I See?", "reason": "see 句型", "type": "sentence_pattern" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 40, "title": "When I Grow Up", "sentencePattern": "I will be a ___." },
+      "flr": [
+        { "itemNumber": 12, "title": "I Can Draw", "reason": "未來/能力主題", "type": "theme" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 42, "title": "Going Up and Down", "sentencePattern": "They go up/down the ___." },
+      "flr": [
+        { "itemNumber": 4, "title": "Fun at the Playground", "reason": "up/down 動作", "type": "theme", "overlapWords": ["up", "down"] }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 45, "title": "My Favorite Places", "sentencePattern": "I went to the ___." },
+      "flr": [
+        { "itemNumber": 3, "title": "Hello, Beach", "reason": "地點/海灘主題", "type": "theme" }
+      ]
+    }
+  ],
+
+  "jysw_jpr_pairings": [
+    {
+      "jysw": { "itemNumber": 10, "title": "Animals on the Farm" },
+      "jpr": [
+        { "itemNumber": 3, "title": "Cc - Cows", "reason": "cows 單字重疊", "type": "vocabulary_overlap", "overlapWords": ["cows"] },
+        { "itemNumber": 8, "title": "Hh - Hen", "reason": "chickens → hen 同類", "type": "vocabulary_overlap", "overlapWords": ["hen"] },
+        { "itemNumber": 16, "title": "Pp - Pig", "reason": "pigs 單字重疊", "type": "vocabulary_overlap", "overlapWords": ["pig"] },
+        { "itemNumber": 19, "title": "Ss - Sun", "reason": "sheep 單字重疊", "type": "vocabulary_overlap", "overlapWords": ["sheep"] }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 14, "title": "Look at the Shapes" },
+      "jpr": [
+        { "itemNumber": 3, "title": "Cc - Cows", "reason": "circle 發音相關", "type": "phonics" },
+        { "itemNumber": 19, "title": "Ss - Sun", "reason": "square 發音相關", "type": "phonics" },
+        { "itemNumber": 20, "title": "Tt - Tiger", "reason": "triangle 發音相關", "type": "phonics" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 18, "title": "At the Shore" },
+      "jpr": [
+        { "itemNumber": 23, "title": "Ww - Whale", "reason": "whale 單字重疊", "type": "vocabulary_overlap", "overlapWords": ["whale"] },
+        { "itemNumber": 3, "title": "Cc - Cows", "reason": "crab, clam C發音", "type": "phonics" },
+        { "itemNumber": 19, "title": "Ss - Sun", "reason": "starfish, snail S發音", "type": "phonics" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 9, "title": "Animal Babies" },
+      "jpr": [
+        { "itemNumber": 18, "title": "Rr - Rabbit", "reason": "bunnies/rabbit 同類", "type": "vocabulary_overlap", "overlapWords": ["rabbit"] },
+        { "itemNumber": 11, "title": "Kk - Kangaroo", "reason": "kittens K發音", "type": "phonics" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 37, "title": "See the Birds" },
+      "jpr": [
+        { "itemNumber": 4, "title": "Dd - Dinosaur", "reason": "duck 單字重疊", "type": "vocabulary_overlap", "overlapWords": ["duck"] },
+        { "itemNumber": 15, "title": "Oo - Octopus", "reason": "owl O發音", "type": "phonics" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 24, "title": "Look at the Weather" },
+      "jpr": [
+        { "itemNumber": 19, "title": "Ss - Sun", "reason": "sun, snow 單字重疊", "type": "vocabulary_overlap", "overlapWords": ["sun", "snow"] },
+        { "itemNumber": 18, "title": "Rr - Rabbit", "reason": "rain 單字重疊", "type": "vocabulary_overlap", "overlapWords": ["rain"] },
+        { "itemNumber": 23, "title": "Ww - Whale", "reason": "wind W發音", "type": "phonics" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 7, "title": "We Have Fruit" },
+      "jpr": [
+        { "itemNumber": 1, "title": "Aa - Apple Tree", "reason": "apples 單字重疊", "type": "vocabulary_overlap", "overlapWords": ["apple"] },
+        { "itemNumber": 23, "title": "Ww - Whale", "reason": "watermelons W發音", "type": "phonics" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 5, "title": "What Has Stripes?" },
+      "jpr": [
+        { "itemNumber": 26, "title": "Zz - Zebra", "reason": "zebra 單字重疊", "type": "vocabulary_overlap", "overlapWords": ["zebra"] },
+        { "itemNumber": 20, "title": "Tt - Tiger", "reason": "tiger 單字重疊", "type": "vocabulary_overlap", "overlapWords": ["tiger"] },
+        { "itemNumber": 6, "title": "Ff - Fish", "reason": "fish 單字重疊", "type": "vocabulary_overlap", "overlapWords": ["fish"] }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 30, "title": "Look at the Sky" },
+      "jpr": [
+        { "itemNumber": 19, "title": "Ss - Sun", "reason": "sun, stars 單字重疊", "type": "vocabulary_overlap", "overlapWords": ["sun", "star"] },
+        { "itemNumber": 13, "title": "Mm - Monkey", "reason": "moon 單字重疊", "type": "vocabulary_overlap", "overlapWords": ["moon"] }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 19, "title": "My Pet" },
+      "jpr": [
+        { "itemNumber": 4, "title": "Dd - Dinosaur", "reason": "dog 單字重疊", "type": "vocabulary_overlap", "overlapWords": ["dog"] },
+        { "itemNumber": 3, "title": "Cc - Cows", "reason": "cat 單字重疊", "type": "vocabulary_overlap", "overlapWords": ["cat"] },
+        { "itemNumber": 6, "title": "Ff - Fish", "reason": "fish 單字重疊", "type": "vocabulary_overlap", "overlapWords": ["fish"] },
+        { "itemNumber": 8, "title": "Hh - Hen", "reason": "horse 單字重疊", "type": "vocabulary_overlap", "overlapWords": ["horse"] }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 40, "title": "When I Grow Up" },
+      "jpr": [
+        { "itemNumber": 4, "title": "Dd - Dinosaur", "reason": "doctor D發音", "type": "phonics" },
+        { "itemNumber": 6, "title": "Ff - Fish", "reason": "firefighter, farmer F發音", "type": "phonics" },
+        { "itemNumber": 20, "title": "Tt - Tiger", "reason": "teacher T發音", "type": "phonics" }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 21, "title": "What Goes Up?" },
+      "jpr": [
+        { "itemNumber": 2, "title": "Bb - Bubbles", "reason": "ball, balloon B發音", "type": "phonics" },
+        { "itemNumber": 11, "title": "Kk - Kangaroo", "reason": "kite 單字重疊", "type": "vocabulary_overlap", "overlapWords": ["kite"] }
+      ]
+    },
+    {
+      "jysw": { "itemNumber": 35, "title": "They Grow Plants" },
+      "jpr": [
+        { "itemNumber": 3, "title": "Cc - Cows", "reason": "corn C發音", "type": "phonics" },
+        { "itemNumber": 16, "title": "Pp - Pig", "reason": "peppers, pumpkins P發音", "type": "phonics" },
+        { "itemNumber": 20, "title": "Tt - Tiger", "reason": "tomatoes T發音", "type": "phonics" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "material": {
+    "id": "flr_a",
+    "name": "First Little Readers Level A",
+    "shortName": "FLR",
+    "type": "book_set",
+    "category": "english",
+    "ageRangeMin": 24,
+    "ageRangeMax": 60,
+    "publisher": "Scholastic",
+    "description": "25本初階英語讀本，簡單句型入門",
+    "isBuiltIn": true,
+    "totalItems": 25
+  },
+  "items": [
+    { "itemNumber": 1, "title": "Fun with Mud", "sentencePattern": "Mud ___.", "vocabularyWords": ["mud", "cookies", "cake", "pie", "donut", "muffin", "bread"] },
+    { "itemNumber": 2, "title": "Cold Rose", "sentencePattern": "Cold/Warm ___.", "vocabularyWords": ["cold", "warm", "nose", "clothes", "toes", "rose"] },
+    { "itemNumber": 3, "title": "Hello, Beach", "sentencePattern": "Hello, ___.", "vocabularyWords": ["sun", "sand", "shell", "crab", "seagull", "sailboat", "whale"] },
+    { "itemNumber": 4, "title": "Fun at the Playground", "sentencePattern": "I go ___.", "vocabularyWords": ["up", "down", "high", "low", "in", "out", "playground"] },
+    { "itemNumber": 5, "title": "Birthday Surprise", "sentencePattern": "I have ___.", "vocabularyWords": ["paper", "scissors", "ribbon", "glue", "stickers", "crayons", "birthday card"] },
+    { "itemNumber": 6, "title": "What is for Supper?", "sentencePattern": "I like ___.", "vocabularyWords": ["pasta", "pizza", "taco", "grilled cheese", "fish", "rice", "beans"] },
+    { "itemNumber": 7, "title": "I Like School", "sentencePattern": "I like to ___.", "vocabularyWords": ["read", "draw", "cut", "glue", "count", "write", "school"] },
+    { "itemNumber": 8, "title": "What Can I See?", "sentencePattern": "I see a ___.", "vocabularyWords": ["ant", "rock", "leaf", "home", "bee", "flower"] },
+    { "itemNumber": 9, "title": "What Do I Need?", "sentencePattern": "I need a ___.", "vocabularyWords": ["table", "chair", "blanket", "pillow", "snack", "flashlight", "friend"] },
+    { "itemNumber": 10, "title": "What Shines?", "sentencePattern": "___ shines.", "vocabularyWords": ["sun", "flashlight", "moon", "dime", "ring", "shoes"] },
+    { "itemNumber": 11, "title": "Bubbles", "sentencePattern": "Bubbles in/at ___.", "vocabularyWords": ["beach", "bath", "sink", "drink", "clothes", "blow", "everywhere"] },
+    { "itemNumber": 12, "title": "I Can Draw", "sentencePattern": "I can draw a/an ___.", "vocabularyWords": ["seal", "clown", "king", "crown", "sheep", "bed"] },
+    { "itemNumber": 13, "title": "Shapes for Lunch", "sentencePattern": "I like to eat a ___.", "vocabularyWords": ["square", "triangle", "oval", "rectangle", "circle"] },
+    { "itemNumber": 14, "title": "Sweet Treat", "sentencePattern": "I add a/the ___.", "vocabularyWords": ["banana", "ice cream", "chocolate", "whipped cream", "nuts", "cherry"] },
+    { "itemNumber": 15, "title": "Winter is Here", "sentencePattern": "Winter is here. Sleep, ___, sleep.", "vocabularyWords": ["bear", "snake", "chipmunk", "frog", "turtle", "groundhog"] },
+    { "itemNumber": 16, "title": "What is Red?", "sentencePattern": "___ are red.", "vocabularyWords": ["apples", "strawberries", "fire truck", "stop sign", "flowers", "hearts"] },
+    { "itemNumber": 17, "title": "Hurry Up!", "sentencePattern": "動作 + Hurry up!", "vocabularyWords": ["get up", "brush teeth", "get dressed", "eat breakfast", "grab lunch", "catch bus"] },
+    { "itemNumber": 18, "title": "Hats, Hats, Hats", "sentencePattern": "I have a hat that ___.", "vocabularyWords": ["tall", "small", "hole", "rolls", "flaps", "mop"] },
+    { "itemNumber": 19, "title": "Look What I Found", "sentencePattern": "I found a ___.", "vocabularyWords": ["stick", "rock", "acorn", "pinecone", "leaf", "feather"] },
+    { "itemNumber": 20, "title": "Class Pets", "sentencePattern": "The 動物 動作 around and around.", "vocabularyWords": ["rabbit", "goldfish", "mouse", "hamster"] },
+    { "itemNumber": 21, "title": "Hide and Seek", "sentencePattern": "I can hide 介係詞 物品.", "vocabularyWords": ["behind", "chair", "inside", "dress", "under"] },
+    { "itemNumber": 22, "title": "Where is Petey?", "sentencePattern": "Is he 介係詞 地方?", "vocabularyWords": ["under", "bed", "inside", "cabin", "door", "drawer"] },
+    { "itemNumber": 23, "title": "When Night Comes", "sentencePattern": "When night comes, the ___ comes out.", "vocabularyWords": ["mouse", "owl", "moth", "bat", "firefly", "cat"] },
+    { "itemNumber": 24, "title": "Almost Spring", "sentencePattern": "物品 is Ving. It is almost spring.", "vocabularyWords": ["sun", "shining", "snow", "melting", "bird", "singing", "flower"] },
+    { "itemNumber": 25, "title": "I Like Stripes", "sentencePattern": "___ has stripes.", "vocabularyWords": ["candy cane", "toothpaste", "flag", "zebra", "street", "ladybug"] }
+  ]
+}
