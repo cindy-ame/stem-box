@@ -280,5 +280,33 @@
         { "itemNumber": 20, "title": "Tt - Tiger", "reason": "tomatoes T發音", "type": "phonics" }
       ]
     }
+  ],
+
+  "single_book_pairings": [
+    {
+      "book": { "name": "Brown Bear, Brown Bear", "keywords": ["brown bear"] },
+      "jysw": [
+        { "itemNumber": 17, "title": "Big Pet, Little Pet", "reason": "共同單字：dog, cat, bird, horse", "type": "vocabulary_overlap", "overlapWords": ["dog", "cat", "bird", "horse"] },
+        { "itemNumber": 19, "title": "My Pet", "reason": "共同單字：dog, horse, cat, bird", "type": "vocabulary_overlap", "overlapWords": ["dog", "horse", "cat", "bird"] },
+        { "itemNumber": 10, "title": "Animals on the Farm", "reason": "共同單字：horse, sheep", "type": "vocabulary_overlap", "overlapWords": ["horse", "sheep"] },
+        { "itemNumber": 37, "title": "See the Birds", "reason": "共同單字：duck", "type": "vocabulary_overlap", "overlapWords": ["duck"] },
+        { "itemNumber": 9, "title": "Animal Babies", "reason": "動物寶寶主題（cat→kittens, dog→puppies）", "type": "theme", "overlapWords": ["kittens", "puppies"] },
+        { "itemNumber": 48, "title": "Time to Eat!", "reason": "共同單字：bear", "type": "vocabulary_overlap", "overlapWords": ["bear"] }
+      ],
+      "flr": [
+        { "itemNumber": 15, "title": "Winter is Here", "reason": "共同單字：bear, frog", "type": "vocabulary_overlap", "overlapWords": ["bear", "frog"] },
+        { "itemNumber": 16, "title": "What is Red?", "reason": "顏色主題（red）", "type": "theme" },
+        { "itemNumber": 23, "title": "When Night Comes", "reason": "共同單字：cat", "type": "vocabulary_overlap", "overlapWords": ["cat"] },
+        { "itemNumber": 20, "title": "Class Pets", "reason": "共同單字：goldfish", "type": "vocabulary_overlap", "overlapWords": ["goldfish"] }
+      ],
+      "jpr": [
+        { "itemNumber": 2, "title": "Bb - Bubbles", "reason": "共同單字：bear, bird", "type": "vocabulary_overlap", "overlapWords": ["bear", "bird"] },
+        { "itemNumber": 4, "title": "Dd - Dinosaur", "reason": "共同單字：dog, duck", "type": "vocabulary_overlap", "overlapWords": ["dog", "duck"] },
+        { "itemNumber": 8, "title": "Hh - Hen", "reason": "共同單字：horse", "type": "vocabulary_overlap", "overlapWords": ["horse"] },
+        { "itemNumber": 6, "title": "Ff - Fish", "reason": "共同單字：frog", "type": "vocabulary_overlap", "overlapWords": ["frog"] },
+        { "itemNumber": 19, "title": "Ss - Sun", "reason": "共同單字：sheep", "type": "vocabulary_overlap", "overlapWords": ["sheep"] },
+        { "itemNumber": 3, "title": "Cc - Cows", "reason": "共同單字：cat", "type": "vocabulary_overlap", "overlapWords": ["cat"] }
+      ]
+    }
   ]
 }
