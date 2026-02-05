@@ -1516,16 +1516,20 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
                           onClick={() => material && setSelectedMaterial(material)}
                           className="flex-shrink-0 w-24 text-center flex flex-col items-stretch"
                         >
-                          <div className={`w-full h-28 rounded-lg mb-1 overflow-hidden bg-gray-50 flex items-center justify-center ${rec.layer === 'auto' ? 'opacity-75' : ''}`}>
-                            {rec.coverImage ? (
-                              <img
-                                src={rec.coverImage}
-                                alt={rec.title}
-                                className="w-full h-full object-contain"
-                              />
-                            ) : (
-                              <Book size={28} className="text-accent/40" />
-                            )}
+                          <div className={`w-full h-28 rounded-lg mb-1 overflow-hidden bg-accent/5 flex items-center justify-center ${rec.layer === 'auto' ? 'opacity-75' : ''}`}>
+                            <img
+                              src={rec.coverImage || ''}
+                              alt={rec.title}
+                              className="w-full h-full object-contain"
+                              onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                              onLoad={(e) => {
+                                const sibling = e.currentTarget.nextElementSibling as HTMLElement;
+                                if (sibling) sibling.style.display = 'none';
+                              }}
+                            />
+                            <div className="flex flex-col items-center">
+                              <BookOpen size={28} className="text-accent/25" strokeWidth={1.5} />
+                            </div>
                           </div>
                           <div className="min-h-[3.2rem]">
                             {isSingleBook ? (
