@@ -1487,7 +1487,7 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
             return (
               <div className="mb-4">
                 <h3 className="text-sm font-medium text-textMain mb-2">可搭配教材</h3>
-                <div className="flex gap-3 overflow-x-auto pb-2">
+                <div className="flex gap-3 overflow-x-auto pb-2 items-start">
                   {topRecommendations.map((rec, idx) => {
                     const material = myMaterials.find(m => m.id === rec.setId);
                     const isSingleBook = rec.itemNumber === 0;
@@ -1495,16 +1495,16 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
                       <button
                         key={`${rec.setId}-${rec.itemNumber}-${idx}`}
                         onClick={() => material && setSelectedMaterial(material)}
-                        className="flex-shrink-0 w-24 text-center"
+                        className="flex-shrink-0 w-24 text-center flex flex-col"
                       >
                         {rec.coverImage ? (
                           <img
                             src={rec.coverImage}
                             alt={rec.title}
-                            className="w-full h-auto rounded-lg mb-1"
+                            className="w-full h-24 object-cover rounded-lg mb-1"
                           />
                         ) : (
-                          <div className="aspect-[3/4] flex items-center justify-center bg-accent/5 rounded-lg mb-1">
+                          <div className="w-full h-24 flex items-center justify-center bg-accent/5 rounded-lg mb-1">
                             <Book size={28} className="text-accent/40" />
                           </div>
                         )}
