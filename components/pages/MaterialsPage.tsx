@@ -1506,7 +1506,7 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
                 </div>
 
                 {topRecommendations.length > 0 ? (
-                  <div className="flex gap-3 overflow-x-auto pb-2 items-start">
+                  <div className="flex gap-3 overflow-x-auto pb-2 items-stretch">
                     {topRecommendations.map((rec, idx) => {
                       const material = myMaterials.find(m => m.id === rec.setId);
                       const isSingleBook = rec.itemNumber === 0;
@@ -1514,30 +1514,32 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
                         <button
                           key={`${rec.setId}-${rec.itemNumber}-${idx}`}
                           onClick={() => material && setSelectedMaterial(material)}
-                          className="flex-shrink-0 w-24 text-center flex flex-col"
+                          className="flex-shrink-0 w-24 text-center flex flex-col items-stretch"
                         >
-                          {rec.coverImage ? (
-                            <img
-                              src={rec.coverImage}
-                              alt={rec.title}
-                              className={`w-full h-24 object-cover rounded-lg mb-1 ${rec.layer === 'auto' ? 'opacity-75' : ''}`}
-                            />
-                          ) : (
-                            <div className="w-full h-24 flex items-center justify-center bg-accent/5 rounded-lg mb-1">
+                          <div className={`w-full h-28 rounded-lg mb-1 overflow-hidden bg-gray-50 flex items-center justify-center ${rec.layer === 'auto' ? 'opacity-75' : ''}`}>
+                            {rec.coverImage ? (
+                              <img
+                                src={rec.coverImage}
+                                alt={rec.title}
+                                className="w-full h-full object-contain"
+                              />
+                            ) : (
                               <Book size={28} className="text-accent/40" />
-                            </div>
-                          )}
-                          {isSingleBook ? (
-                            <p className="text-xs text-textMain leading-tight">{rec.title}</p>
-                          ) : (
-                            <>
-                              <p className="text-xs font-medium text-textMain">
-                                {rec.setName} #{rec.itemNumber}
-                              </p>
-                              <p className="text-xs text-textSub leading-tight">{rec.title}</p>
-                            </>
-                          )}
-                          <p className={`text-[10px] mt-0.5 leading-tight ${
+                            )}
+                          </div>
+                          <div className="min-h-[3.2rem]">
+                            {isSingleBook ? (
+                              <p className="text-xs text-textMain leading-tight">{rec.title}</p>
+                            ) : (
+                              <>
+                                <p className="text-xs font-medium text-textMain">
+                                  {rec.setName} #{rec.itemNumber}
+                                </p>
+                                <p className="text-xs text-textSub leading-tight">{rec.title}</p>
+                              </>
+                            )}
+                          </div>
+                          <p className={`text-[10px] mt-1 leading-tight ${
                             rec.layer === 'preset' ? 'text-accent/70' :
                             rec.layer === 'user' ? 'text-blue-500/70' :
                             'text-textSub/50 italic'
