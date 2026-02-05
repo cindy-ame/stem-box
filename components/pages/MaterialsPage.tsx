@@ -5,6 +5,12 @@ import {
   Book, BookMarked, Languages, Camera, Image, Loader2, SlidersHorizontal, Check
 } from 'lucide-react';
 
+// 匯入教材配對資料
+import pairingsData from '../../data/pairings.json';
+import jyswData from '../../data/materials_jysw.json';
+import flrData from '../../data/materials_flr.json';
+import jprData from '../../data/materials_jpr.json';
+
 // Icon 映射
 const categoryIcons: Record<string, React.ReactNode> = {
   science: <FlaskConical size={16} />,
@@ -157,10 +163,38 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
       coverImage: '/covers/jysw.avif',
     },
     {
+      id: 'flr',
+      name: 'First Little Readers Level A',
+      shortName: 'FLR',
+      totalItems: 25,
+      categories: ['language'],
+      subCategory: 'english',
+      ageRange: '2-5歲',
+      tags: ['句型', '入門'],
+      notes: '',
+      isPrebuilt: true,
+      progress: 8,
+      readCount: 0,
+    },
+    {
+      id: 'jpr',
+      name: 'JY Phonics Readers',
+      shortName: 'JPR',
+      totalItems: 36,
+      categories: ['language'],
+      subCategory: 'english',
+      ageRange: '2-6歲',
+      tags: ['自然發音', 'Phonics'],
+      notes: '',
+      isPrebuilt: true,
+      progress: 5,
+      readCount: 0,
+    },
+    {
       id: 'sample_single',
       name: 'Brown Bear, Brown Bear',
       totalItems: 1,
-      categories: ['language', 'art'], // 範例：同時屬於語言和藝術
+      categories: ['language', 'art'],
       subCategory: 'english',
       ageRange: '1-4歲',
       tags: ['顏色', '動物'],
@@ -1194,6 +1228,304 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
               </div>
             )}
           </div>
+
+          {/* 可搭配教材 - 使用 pairings.json 配對資料 */}
+          {(() => {
+            interface BookRecommendation {
+              setId: string;
+              setName: string;
+              itemNumber: number;
+              title: string;
+              reason: string;
+              type: string;
+              coverImage?: string;
+              score: number; // 配對分數
+            }
+
+            const recommendations: BookRecommendation[] = [];
+            const seenKeys = new Set<string>(); // 用於去重
+            const hasFlr = myMaterials.some(m => m.id === 'flr' || m.id === 'flr_a');
+            const hasJpr = myMaterials.some(m => m.id === 'jpr');
+            const hasJysw = myMaterials.some(m => m.id === 'jysw');
+
+            const addRecommendation = (rec: BookRecommendation) => {
+              const key = `${rec.setId}-${rec.itemNumber}`;
+              if (!seenKeys.has(key)) {
+                seenKeys.add(key);
+                recommendations.push(rec);
+              }
+            };
+
+            // 分數權重常數
+            const SCORE_PRESET_PAIRING = 10;  // 預設配對（官方建議）
+            const SCORE_SAME_LANGUAGE = 5;    // 相同語言
+            const SCORE_AGE_OVERLAP = 3;      // 年齡重疊
+            const SCORE_SAME_CATEGORY = 2;    // 相同分類
+            const SCORE_PER_TAG = 1;          // 每個相同標籤
+
+            // 如果選的是 JYSW，找配對的 FLR 和 JPR
+            if (selectedMaterial.id === 'jysw') {
+              // 找所有 JYSW 書本的 FLR 配對
+              if (hasFlr) {
+                pairingsData.jysw_flr_pairings.forEach(pairing => {
+                  pairing.flr.forEach(flr => {
+                    addRecommendation({
+                      setId: 'flr',
+                      setName: 'FLR',
+                      itemNumber: flr.itemNumber,
+                      title: flr.title,
+                      reason: flr.reason,
+                      type: flr.type,
+                      coverImage: `/covers/flr/${flr.itemNumber}.jpg`,
+                      score: SCORE_PRESET_PAIRING + SCORE_SAME_LANGUAGE,
+                    });
+                  });
+                });
+              }
+              // 找所有 JYSW 書本的 JPR 配對
+              if (hasJpr) {
+                pairingsData.jysw_jpr_pairings.forEach(pairing => {
+                  pairing.jpr.forEach(jpr => {
+                    addRecommendation({
+                      setId: 'jpr',
+                      setName: 'JPR',
+                      itemNumber: jpr.itemNumber,
+                      title: jpr.title,
+                      reason: jpr.reason,
+                      type: jpr.type,
+                      coverImage: `/covers/jpr/${jpr.itemNumber}.jpg`,
+                      score: SCORE_PRESET_PAIRING + SCORE_SAME_LANGUAGE,
+                    });
+                  });
+                });
+              }
+            }
+
+            // 如果選的是 FLR，反向找配對的 JYSW
+            if ((selectedMaterial.id === 'flr' || selectedMaterial.id === 'flr_a') && hasJysw) {
+              pairingsData.jysw_flr_pairings.forEach(pairing => {
+                if (pairing.flr.length > 0) {
+                  addRecommendation({
+                    setId: 'jysw',
+                    setName: 'JYSW',
+                    itemNumber: pairing.jysw.itemNumber,
+                    title: pairing.jysw.title,
+                    reason: pairing.flr[0].reason,
+                    type: pairing.flr[0].type,
+                    coverImage: `/covers/jysw/${pairing.jysw.itemNumber}.jpg`,
+                    score: SCORE_PRESET_PAIRING + SCORE_SAME_LANGUAGE,
+                  });
+                }
+              });
+            }
+
+            // 如果選的是 JPR，反向找配對的 JYSW
+            if (selectedMaterial.id === 'jpr' && hasJysw) {
+              pairingsData.jysw_jpr_pairings.forEach(pairing => {
+                if (pairing.jpr.length > 0) {
+                  addRecommendation({
+                    setId: 'jysw',
+                    setName: 'JYSW',
+                    itemNumber: pairing.jysw.itemNumber,
+                    title: pairing.jysw.title,
+                    reason: pairing.jpr[0].reason,
+                    type: pairing.jpr[0].type,
+                    coverImage: `/covers/jysw/${pairing.jysw.itemNumber}.jpg`,
+                    score: SCORE_PRESET_PAIRING + SCORE_SAME_LANGUAGE,
+                  });
+                }
+              });
+            }
+
+            // 年齡範圍解析函數
+            const parseAgeRange = (ageRange: string): { min: number; max: number } => {
+              const match = ageRange.match(/(\d+)[-~](\d+)/);
+              if (match) return { min: parseInt(match[1]), max: parseInt(match[2]) };
+              const single = ageRange.match(/(\d+)/);
+              if (single) return { min: parseInt(single[1]), max: parseInt(single[1]) + 2 };
+              return { min: 0, max: 99 };
+            };
+
+            // 檢查年齡範圍是否相近（有重疊）
+            const isAgeCompatible = (age1: string, age2: string): boolean => {
+              const range1 = parseAgeRange(age1);
+              const range2 = parseAgeRange(age2);
+              return range1.min <= range2.max && range2.min <= range1.max;
+            };
+
+            // 對於其他教材（或補充推薦），基於語言、年齡、標籤的配對
+            const addGeneralRecommendations = () => {
+              myMaterials.forEach(m => {
+                if (m.id === selectedMaterial.id) return;
+
+                // 1. 相同語言檢查（必要條件，但都沒設語言時跳過檢查）
+                if (selectedMaterial.subCategory && m.subCategory &&
+                    selectedMaterial.subCategory !== m.subCategory) {
+                  return; // 語言不同，跳過
+                }
+
+                // 2. 相近年齡檢查
+                if (!isAgeCompatible(selectedMaterial.ageRange, m.ageRange)) {
+                  return; // 年齡範圍不相容，跳過
+                }
+
+                // 3. 計算匹配分數（按權重表）
+                let score = 0;
+                let reasons: string[] = [];
+
+                // 相同語言 +5
+                if (selectedMaterial.subCategory && m.subCategory === selectedMaterial.subCategory) {
+                  score += SCORE_SAME_LANGUAGE;
+                  reasons.push('相同語言');
+                }
+
+                // 年齡重疊 +3（已通過檢查表示有重疊）
+                score += SCORE_AGE_OVERLAP;
+
+                // 相同分類 +2
+                const matchingCategories = m.categories.filter(cat => selectedMaterial.categories.includes(cat));
+                if (matchingCategories.length > 0) {
+                  score += SCORE_SAME_CATEGORY * matchingCategories.length;
+                  reasons.push('相同分類');
+                }
+
+                // 每個相同標籤 +1
+                const matchingTags = m.tags.filter(tag => selectedMaterial.tags.includes(tag));
+                if (matchingTags.length > 0) {
+                  score += SCORE_PER_TAG * matchingTags.length;
+                  reasons.push(`${matchingTags[0]}主題`);
+                }
+
+                // 只推薦單本書，不推薦整套教材
+                if (score > SCORE_AGE_OVERLAP && m.totalItems === 1) {
+                  addRecommendation({
+                    setId: m.id,
+                    setName: m.shortName || m.name,
+                    itemNumber: 0,
+                    title: m.name,
+                    reason: reasons[0] || '相關教材',
+                    type: 'general',
+                    coverImage: m.coverImage,
+                    score,
+                  });
+                }
+              });
+            };
+
+            // 對於非預建教材（如自訂的單本書），根據標籤配對套書中的具體書本
+            if (!['jysw', 'flr', 'flr_a', 'jpr'].includes(selectedMaterial.id)) {
+              // 先嘗試通用推薦（其他單本書）
+              addGeneralRecommendations();
+
+              // 根據標籤配對 JYSW 書本
+              if (hasJysw && selectedMaterial.tags.length > 0) {
+                const tagToTheme: Record<string, string[]> = {
+                  '動物': ['Animals', 'Animal Habitats'],
+                  '顏色': ['Colors', 'Patterns'],
+                  '數字': ['Counting', 'Counting and Comparing'],
+                  '形狀': ['Shapes'],
+                  '食物': ['Health and Nutrition', 'Food'],
+                  '家庭': ['Friends and Family', 'Families'],
+                  '自然': ['Weather and Seasons', 'Earth', 'Plants'],
+                };
+
+                const matchingThemes = selectedMaterial.tags.flatMap(tag => tagToTheme[tag] || []);
+
+                jyswData.items.forEach((item: { itemNumber: number; title: string; theme: string }) => {
+                  if (matchingThemes.some(theme => item.theme.includes(theme))) {
+                    addRecommendation({
+                      setId: 'jysw',
+                      setName: 'JYSW',
+                      itemNumber: item.itemNumber,
+                      title: item.title,
+                      reason: `${selectedMaterial.tags[0]}主題`,
+                      type: 'theme',
+                      coverImage: `/covers/jysw/${item.itemNumber}.jpg`,
+                      score: SCORE_SAME_LANGUAGE + SCORE_AGE_OVERLAP + SCORE_PER_TAG,
+                    });
+                  }
+                });
+              }
+
+              // 根據標籤配對 FLR 書本
+              if (hasFlr && selectedMaterial.tags.length > 0) {
+                const tagKeywords: Record<string, string[]> = {
+                  '動物': ['animal', 'pet', 'bear', 'bird'],
+                  '顏色': ['color', 'red'],
+                  '食物': ['lunch', 'supper', 'treat'],
+                  '家庭': ['family', 'home'],
+                  '自然': ['spring', 'winter', 'beach', 'night'],
+                };
+
+                const matchingKeywords = selectedMaterial.tags.flatMap(tag => tagKeywords[tag] || []);
+
+                flrData.items.forEach((item: { itemNumber: number; title: string }) => {
+                  const titleLower = item.title.toLowerCase();
+                  if (matchingKeywords.some(kw => titleLower.includes(kw))) {
+                    addRecommendation({
+                      setId: 'flr',
+                      setName: 'FLR',
+                      itemNumber: item.itemNumber,
+                      title: item.title,
+                      reason: `${selectedMaterial.tags[0]}主題`,
+                      type: 'theme',
+                      coverImage: `/covers/flr/${item.itemNumber}.jpg`,
+                      score: SCORE_SAME_LANGUAGE + SCORE_AGE_OVERLAP + SCORE_PER_TAG,
+                    });
+                  }
+                });
+              }
+            }
+
+            // 按分數排序，取前 6 個
+            const topRecommendations = recommendations
+              .sort((a, b) => b.score - a.score)
+              .slice(0, 6);
+
+            if (topRecommendations.length === 0) return null;
+
+            return (
+              <div className="mb-4">
+                <h3 className="text-sm font-medium text-textMain mb-2">可搭配教材</h3>
+                <div className="flex gap-3 overflow-x-auto pb-2">
+                  {topRecommendations.map((rec, idx) => {
+                    const material = myMaterials.find(m => m.id === rec.setId);
+                    const isSingleBook = rec.itemNumber === 0;
+                    return (
+                      <button
+                        key={`${rec.setId}-${rec.itemNumber}-${idx}`}
+                        onClick={() => material && setSelectedMaterial(material)}
+                        className="flex-shrink-0 w-24 text-center"
+                      >
+                        {rec.coverImage ? (
+                          <img
+                            src={rec.coverImage}
+                            alt={rec.title}
+                            className="w-full h-auto rounded-lg mb-1"
+                          />
+                        ) : (
+                          <div className="aspect-[3/4] flex items-center justify-center bg-accent/5 rounded-lg mb-1">
+                            <Book size={28} className="text-accent/40" />
+                          </div>
+                        )}
+                        {isSingleBook ? (
+                          <p className="text-xs text-textMain leading-tight">{rec.title}</p>
+                        ) : (
+                          <>
+                            <p className="text-xs font-medium text-textMain">
+                              {rec.setName} #{rec.itemNumber}
+                            </p>
+                            <p className="text-xs text-textSub leading-tight">{rec.title}</p>
+                          </>
+                        )}
+                        <p className="text-[10px] text-accent/70 mt-0.5 leading-tight">{rec.reason}</p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
 
           {/* AI 功能提示 */}
           {selectedMaterial.isPrebuilt ? (
