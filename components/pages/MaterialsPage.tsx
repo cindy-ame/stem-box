@@ -2081,45 +2081,101 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
           </div>
 
           <div className="p-4 space-y-3">
-            {brandMaterials.map((material) => (
-              <button
-                key={material.id}
-                onClick={() => {
-                  setSelectedMaterial(material);
-                  setViewMode('detail');
-                }}
-                className="w-full bg-cardBgSoft rounded-2xl p-4 border border-amber-100 text-left"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center">
-                    <span className="text-sm font-bold text-accent">
-                      {material.shortName?.replace('LUK ', '') || material.name.slice(0, 2)}
-                    </span>
+            {brandMaterials.map((material) => {
+              // 檢查是否有書目資料（totalItems > 1 表示有細項可看）
+              const hasBookList = material.totalItems > 1;
+
+              return (
+                <button
+                  key={material.id}
+                  onClick={() => {
+                    if (hasBookList) {
+                      // 直接進入該系列的書目列表
+                      setSelectedMaterial(material);
+                      // 不改 viewMode，讓它重新渲染為書目網格
+                    }
+                  }}
+                  className={`w-full bg-cardBgSoft rounded-2xl p-4 border border-amber-100 text-left ${!hasBookList ? 'opacity-60' : ''}`}
+                  disabled={!hasBookList}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center">
+                      <span className="text-sm font-bold text-accent">
+                        {material.shortName?.replace('LUK ', '') || material.name.slice(0, 2)}
+                      </span>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-medium text-textMain">{material.name}</h3>
+                      <p className="text-xs text-textSub mt-0.5">
+                        {material.ageRange} · {material.progress}/{material.totalItems} 完成
+                      </p>
+                      {material.notes && (
+                        <p className="text-xs text-accent/70 mt-0.5">{material.notes}</p>
+                      )}
+                    </div>
+                    {hasBookList && <ChevronRight size={20} className="text-textSub" />}
                   </div>
-                  <div className="flex-1">
-                    <h3 className="font-medium text-textMain">{material.name}</h3>
-                    <p className="text-xs text-textSub mt-0.5">
-                      {material.ageRange} · {material.progress}/{material.totalItems} 完成
-                    </p>
-                    {material.notes && (
-                      <p className="text-xs text-accent/70 mt-0.5">{material.notes}</p>
-                    )}
-                  </div>
-                  <ChevronRight size={20} className="text-textSub" />
-                </div>
-              </button>
-            ))}
+                </button>
+              );
+            })}
           </div>
         </div>
       );
     }
 
-    // 書籍的情況：顯示書目網格
+    // 檢查是否為教具系列（如 luk_va），如果是，返回時要回到品牌列表
+    const toolSeriesPrefixes = ['luk_', 'smart_games_', 'learning_resources_', '康軒桌遊_'];
+    const isToolSeries = toolSeriesPrefixes.some(prefix => selectedMaterial.id.startsWith(prefix));
+
+    // 找出對應的品牌
+    const getBrandForSeries = () => {
+      if (selectedMaterial.id.startsWith('luk_')) return 'luk';
+      if (selectedMaterial.id.startsWith('smart_games_')) return 'smart_games';
+      if (selectedMaterial.id.startsWith('learning_resources_')) return 'learning_resources';
+      if (selectedMaterial.id.startsWith('康軒桌遊_')) return '康軒桌遊';
+      return null;
+    };
+
+    const handleBackFromBookList = () => {
+      if (isToolSeries) {
+        // 教具系列：返回品牌的系列列表
+        const brandId = getBrandForSeries();
+        if (brandId) {
+          const toolBrands: Record<string, { name: string; shortName: string }> = {
+            luk: { name: 'LUK 洛可腦力開發', shortName: 'LUK' },
+            smart_games: { name: 'Smart Games', shortName: 'Smart Games' },
+            learning_resources: { name: 'Learning Resources', shortName: 'Learning Resources' },
+            康軒桌遊: { name: '小康軒桌遊', shortName: '小康軒' },
+          };
+          const brand = toolBrands[brandId];
+          const brandMaterials = myMaterials.filter(m => m.id.startsWith(`${brandId}_`));
+          setSelectedMaterial({
+            id: brandId,
+            name: brand.name,
+            shortName: brand.shortName,
+            totalItems: brandMaterials.reduce((sum, m) => sum + m.totalItems, 0),
+            categories: ['math', 'science'],
+            ageRange: brandMaterials[0]?.ageRange || '',
+            tags: ['邏輯', '專注力'],
+            notes: '',
+            isPrebuilt: true,
+            progress: brandMaterials.reduce((sum, m) => sum + m.progress, 0),
+            readCount: 0,
+          });
+          // 保持在 bookList 顯示系列列表
+        }
+      } else {
+        // 書籍：返回詳情頁
+        setViewMode('detail');
+      }
+    };
+
+    // 書籍/教具系列的情況：顯示書目網格
     return (
       <div className="pb-20 bg-white">
         <div className="bg-white sticky top-0 z-10 border-b border-gray-100">
           <div className="flex items-center p-4">
-            <button onClick={() => setViewMode('detail')} className="mr-3 p-1 -ml-1 rounded-lg hover:bg-gray-100">
+            <button onClick={handleBackFromBookList} className="mr-3 p-1 -ml-1 rounded-lg hover:bg-gray-100">
               <ChevronLeft size={24} className="text-textMain" />
             </button>
             <div>
