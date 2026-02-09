@@ -137,6 +137,7 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]); // 空陣列 = 全部
   const [selectedSubCategory, setSelectedSubCategory] = useState('all');
   const [showFilterPanel, setShowFilterPanel] = useState(false); // 篩選面板開關
+  const [libraryTab, setLibraryTab] = useState<'materials' | 'books'>('books'); // 教材庫/書庫切換
 
   // 使用者自訂配對
   interface UserPairing {
@@ -408,8 +409,17 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
     }
   };
 
-  // 篩選後的教材（AND 邏輯：必須符合所有選擇的分類）
+  // 篩選後的教材（先按 tab 分類，再套用篩選條件）
   const filteredMaterials = myMaterials.filter(material => {
+    // 先根據 tab 過濾：書庫顯示書本（有 language 類別），教具庫顯示教具（沒有 language 類別）
+    if (libraryTab === 'books') {
+      // 書庫：必須有 language 類別
+      if (!material.categories.includes('language')) return false;
+    } else {
+      // 教具庫：不能有 language 類別
+      if (material.categories.includes('language')) return false;
+    }
+
     // 沒有選擇任何分類 = 顯示全部
     if (selectedCategories.length === 0) return true;
     // 教材必須包含所有選擇的分類
@@ -435,7 +445,7 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
             <button onClick={onBack} className="mr-3 p-1 -ml-1 rounded-lg hover:bg-gray-100">
               <ChevronLeft size={24} className="text-textMain" />
             </button>
-            <h1 className="text-lg font-bold text-textMain">我的教材庫</h1>
+            <h1 className="text-lg font-bold text-textMain">{libraryTab === 'books' ? '我的書庫' : '我的教具庫'}</h1>
           </div>
           <div className="flex items-center gap-2">
             {/* 篩選按鈕 */}
@@ -460,6 +470,30 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
               <Plus size={20} />
             </button>
           </div>
+        </div>
+
+        {/* 教材庫/書庫 切換 Tab */}
+        <div className="flex px-4 pb-3 gap-2">
+          <button
+            onClick={() => setLibraryTab('books')}
+            className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors ${
+              libraryTab === 'books'
+                ? 'bg-accent text-white'
+                : 'bg-gray-100 text-textSub'
+            }`}
+          >
+            書庫
+          </button>
+          <button
+            onClick={() => setLibraryTab('materials')}
+            className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors ${
+              libraryTab === 'materials'
+                ? 'bg-accent text-white'
+                : 'bg-gray-100 text-textSub'
+            }`}
+          >
+            教具庫
+          </button>
         </div>
       </div>
 

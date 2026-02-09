@@ -1,0 +1,17 @@
+{
+  "name": "STEM Box 教材管理",
+  "short_name": "STEM Box",
+  "description": "親子英語學習助手",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FDF6E3",
+  "theme_color": "#10B981",
+  "icons": [
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
