@@ -226,6 +226,16 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
   // 教具系列展開狀態
   const [expandedTool, setExpandedTool] = useState<string | null>(null);
 
+  // 教材/教具的自訂項目列表 (key: materialId, value: 項目陣列)
+  interface MaterialItem {
+    id: number;
+    title: string;
+    completed: boolean;
+  }
+  const [customItems, setCustomItems] = useState<Record<string, MaterialItem[]>>({});
+  const [isEditingItems, setIsEditingItems] = useState(false);
+  const [newItemTitle, setNewItemTitle] = useState('');
+
   // 自訂語言子分類
   const [customLanguages, setCustomLanguages] = useState<{ id: string; label: string }[]>([]);
   const [newLanguageInput, setNewLanguageInput] = useState('');
@@ -2171,7 +2181,14 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
     };
 
     // 根據類型產生項目列表
-    const getItemsForMaterial = () => {
+    const getItemsForMaterial = (): MaterialItem[] => {
+      const materialId = selectedMaterial.id;
+
+      // 如果有自訂項目，使用自訂項目
+      if (customItems[materialId]) {
+        return customItems[materialId];
+      }
+
       // 教具系列：產生編號項目
       if (isToolSeries) {
         return Array.from({ length: selectedMaterial.totalItems }, (_, i) => ({
@@ -2187,18 +2204,84 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
     const items = getItemsForMaterial();
     const itemLabel = isToolSeries ? '本' : '本';
 
+    // 新增項目
+    const handleAddItem = () => {
+      const materialId = selectedMaterial.id;
+      const currentItems = customItems[materialId] || items;
+      const newId = currentItems.length > 0 ? Math.max(...currentItems.map(i => i.id)) + 1 : 1;
+      const newItem: MaterialItem = {
+        id: newId,
+        title: newItemTitle || `第 ${newId} 本`,
+        completed: false,
+      };
+      setCustomItems({
+        ...customItems,
+        [materialId]: [...currentItems, newItem],
+      });
+      setNewItemTitle('');
+      // 更新教材的 totalItems
+      const updatedMaterials = myMaterials.map(m =>
+        m.id === materialId ? { ...m, totalItems: currentItems.length + 1 } : m
+      );
+      setMyMaterials(updatedMaterials);
+    };
+
+    // 刪除項目
+    const handleDeleteItem = (itemId: number) => {
+      const materialId = selectedMaterial.id;
+      const currentItems = customItems[materialId] || items;
+      const newItems = currentItems.filter(i => i.id !== itemId);
+      setCustomItems({
+        ...customItems,
+        [materialId]: newItems,
+      });
+      // 更新教材的 totalItems
+      const updatedMaterials = myMaterials.map(m =>
+        m.id === materialId ? { ...m, totalItems: newItems.length } : m
+      );
+      setMyMaterials(updatedMaterials);
+    };
+
+    // 切換完成狀態
+    const handleToggleComplete = (itemId: number) => {
+      const materialId = selectedMaterial.id;
+      const currentItems = customItems[materialId] || items;
+      const newItems = currentItems.map(i =>
+        i.id === itemId ? { ...i, completed: !i.completed } : i
+      );
+      setCustomItems({
+        ...customItems,
+        [materialId]: newItems,
+      });
+      // 更新教材的 progress
+      const completedCount = newItems.filter(i => i.completed).length;
+      const updatedMaterials = myMaterials.map(m =>
+        m.id === materialId ? { ...m, progress: completedCount } : m
+      );
+      setMyMaterials(updatedMaterials);
+      setSelectedMaterial({ ...selectedMaterial, progress: completedCount });
+    };
+
     // 書籍/教具系列的情況：顯示書目網格
     return (
       <div className="pb-20 bg-white">
         <div className="bg-white sticky top-0 z-10 border-b border-gray-100">
-          <div className="flex items-center p-4">
-            <button onClick={handleBackFromBookList} className="mr-3 p-1 -ml-1 rounded-lg hover:bg-gray-100">
-              <ChevronLeft size={24} className="text-textMain" />
-            </button>
-            <div>
-              <h1 className="text-lg font-bold text-textMain">{selectedMaterial.shortName || selectedMaterial.name}</h1>
-              <p className="text-xs text-textSub">{selectedMaterial.progress}/{selectedMaterial.totalItems} {itemLabel}已完成</p>
+          <div className="flex items-center justify-between p-4">
+            <div className="flex items-center">
+              <button onClick={() => { handleBackFromBookList(); setIsEditingItems(false); }} className="mr-3 p-1 -ml-1 rounded-lg hover:bg-gray-100">
+                <ChevronLeft size={24} className="text-textMain" />
+              </button>
+              <div>
+                <h1 className="text-lg font-bold text-textMain">{selectedMaterial.shortName || selectedMaterial.name}</h1>
+                <p className="text-xs text-textSub">{items.filter(i => i.completed).length}/{items.length} {itemLabel}已完成</p>
+              </div>
             </div>
+            <button
+              onClick={() => setIsEditingItems(!isEditingItems)}
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium ${isEditingItems ? 'bg-accent text-white' : 'bg-gray-100 text-textSub'}`}
+            >
+              {isEditingItems ? '完成' : '編輯'}
+            </button>
           </div>
         </div>
 
@@ -2207,7 +2290,8 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
             {items.map((item) => (
               <div
                 key={item.id}
-                className={`relative rounded-xl overflow-hidden border-2 ${
+                onClick={() => !isEditingItems && handleToggleComplete(item.id)}
+                className={`relative rounded-xl overflow-hidden border-2 cursor-pointer ${
                   item.completed ? 'border-accent' : 'border-gray-200'
                 }`}
               >
@@ -2221,16 +2305,35 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
                     <p className="text-xs text-textSub font-medium leading-tight">{item.title}</p>
                   </div>
                 </div>
-                {item.completed && (
+                {item.completed && !isEditingItems && (
                   <div className="absolute top-1 right-1 w-5 h-5 bg-accent rounded-full flex items-center justify-center">
                     <Check size={12} className="text-white" />
                   </div>
+                )}
+                {isEditingItems && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); handleDeleteItem(item.id); }}
+                    className="absolute top-1 right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center"
+                  >
+                    <X size={12} className="text-white" />
+                  </button>
                 )}
                 <div className="absolute bottom-1 left-1 bg-black/50 text-white text-xs px-1.5 py-0.5 rounded">
                   #{item.id}
                 </div>
               </div>
             ))}
+
+            {/* 新增項目按鈕 */}
+            <button
+              onClick={() => handleAddItem()}
+              className="aspect-[3/4] rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center hover:border-accent hover:bg-accent/5 transition-colors"
+            >
+              <div className="text-center">
+                <Plus size={24} className="text-gray-400 mx-auto mb-1" />
+                <p className="text-xs text-gray-400">新增</p>
+              </div>
+            </button>
           </div>
         </div>
       </div>
