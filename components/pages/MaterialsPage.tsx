@@ -75,23 +75,43 @@ const prebuiltBooks = [
 // 預建教具（教具庫用）
 const prebuiltTools = [
   {
-    id: 'logico',
-    name: 'LOGICO 邏輯狗',
-    shortName: 'LOGICO',
+    id: 'luk',
+    name: 'LUK 洛可腦力開發',
+    shortName: 'LUK',
     totalItems: 1,
     description: '德國邏輯思維訓練教具',
+    categories: ['math', 'science'],
+    ageRange: '3-8歲',
+    hasFullData: false,
+  },
+  {
+    id: '康軒桌遊',
+    name: '小康軒桌遊系列',
+    shortName: '小康軒',
+    totalItems: 1,
+    description: '拯救快樂森林等益智桌遊',
     categories: ['math', 'science'],
     ageRange: '3-6歲',
     hasFullData: false,
   },
   {
-    id: 'pattern_blocks',
-    name: '圖形積木',
-    shortName: '圖形積木',
+    id: 'smart_games',
+    name: 'Smart Games',
+    shortName: 'Smart Games',
     totalItems: 1,
-    description: '幾何圖形認知與空間概念',
-    categories: ['math', 'art'],
-    ageRange: '2-6歲',
+    description: '比利時益智解謎桌遊',
+    categories: ['math', 'science'],
+    ageRange: '3-99歲',
+    hasFullData: false,
+  },
+  {
+    id: 'learning_resources',
+    name: 'Learning Resources',
+    shortName: 'LR',
+    totalItems: 1,
+    description: '美國 STEM 教具品牌',
+    categories: ['science', 'math', 'engineering'],
+    ageRange: '2-8歲',
     hasFullData: false,
   },
   {
@@ -102,6 +122,16 @@ const prebuiltTools = [
     description: '立體建構與創意發想',
     categories: ['engineering', 'art'],
     ageRange: '3-8歲',
+    hasFullData: false,
+  },
+  {
+    id: 'pattern_blocks',
+    name: '圖形積木',
+    shortName: '圖形積木',
+    totalItems: 1,
+    description: '幾何圖形認知與空間概念',
+    categories: ['math', 'art'],
+    ageRange: '2-6歲',
     hasFullData: false,
   },
 ];
@@ -127,7 +157,10 @@ const ageOptions = [
 ];
 
 // 常用主題標籤
-const commonTags = ['動物', '顏色', '數字', '形狀', '食物', '交通', '家庭', '自然', '身體', '情緒'];
+// 書籍常用標籤
+const bookTags = ['動物', '顏色', '數字', '形狀', '食物', '交通', '家庭', '自然', '身體', '情緒'];
+// 教具常用標籤
+const toolTags = ['邏輯', '建構', '感官', '精細動作', '空間', '創意', '配對', '排序', '專注力', '手眼協調'];
 
 type ViewMode = 'library' | 'addChoice' | 'addPrebuilt' | 'addCustom' | 'addByPhoto' | 'detail' | 'bookList';
 
@@ -796,26 +829,24 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
             </div>
           </button>
 
-          {/* 拍照辨識（僅書庫顯示） */}
-          {isBooks && (
-            <button
-              onClick={() => setViewMode('addByPhoto')}
-              className="w-full bg-cardBgSoft rounded-2xl p-4 border border-amber-100 text-left card-hover"
-            >
-              <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-              <Camera className="text-blue-500" size={24} />
-            </div>
-            <div className="flex-1">
-              <h3 className="font-bold text-textMain">拍照辨識</h3>
-              <p className="text-xs text-textSub mt-0.5">
-                拍攝書籍封面，AI 自動填入資訊
-              </p>
-            </div>
+          {/* 拍照辨識 */}
+          <button
+            onClick={() => setViewMode('addByPhoto')}
+            className="w-full bg-cardBgSoft rounded-2xl p-4 border border-amber-100 text-left card-hover"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                <Camera className="text-blue-500" size={24} />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-textMain">拍照辨識</h3>
+                <p className="text-xs text-textSub mt-0.5">
+                  {isBooks ? '拍攝書籍封面，AI 自動填入資訊' : '拍攝教具外盒，AI 自動填入資訊'}
+                </p>
+              </div>
               <ChevronRight size={20} className="text-textSub" />
             </div>
           </button>
-          )}
 
           {/* 自訂新增 */}
           <button
@@ -841,49 +872,54 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
   };
 
   // 渲染拍照辨識頁面
-  const renderAddByPhoto = () => (
-    <div className="pb-20 bg-white">
-      <div className="bg-white sticky top-0 z-10 border-b border-gray-100">
-        <div className="flex items-center p-4">
-          <button
-            onClick={() => {
-              setViewMode('addChoice');
-              setPhotoPreview(null);
-              setAnalysisResult(null);
-            }}
-            className="mr-3 p-1 -ml-1 rounded-lg hover:bg-gray-100"
-          >
-            <ChevronLeft size={24} className="text-textMain" />
-          </button>
-          <h1 className="text-lg font-bold text-textMain">拍照辨識</h1>
-        </div>
-      </div>
+  const renderAddByPhoto = () => {
+    const isBooks = libraryTab === 'books';
 
-      <div className="p-4">
-        {/* 說明 */}
-        <div className="bg-blue-50 rounded-xl p-3 mb-4 border border-blue-100">
-          <p className="text-xs text-blue-700 leading-relaxed">
-            <Camera size={12} className="inline mr-1" />
-            拍攝或上傳書籍封面，AI 將自動辨識書名、作者等資訊。
-          </p>
-        </div>
-
-        {/* 上傳區域 */}
-        {!photoPreview ? (
-          <div className="space-y-3">
-            {/* 拍照按鈕 */}
+    return (
+      <div className="pb-20 bg-white">
+        <div className="bg-white sticky top-0 z-10 border-b border-gray-100">
+          <div className="flex items-center p-4">
             <button
-              onClick={() => fileInputRef.current?.click()}
-              className="w-full border-2 border-dashed border-blue-300 rounded-2xl p-8 flex flex-col items-center gap-3 text-blue-500 hover:border-blue-500 hover:bg-blue-50 transition-colors"
+              onClick={() => {
+                setViewMode('addChoice');
+                setPhotoPreview(null);
+                setAnalysisResult(null);
+              }}
+              className="mr-3 p-1 -ml-1 rounded-lg hover:bg-gray-100"
             >
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-                <Camera size={32} />
-              </div>
-              <div className="text-center">
-                <p className="font-medium">拍攝書籍封面</p>
-                <p className="text-xs text-blue-400 mt-1">或從相簿選擇照片</p>
-              </div>
+              <ChevronLeft size={24} className="text-textMain" />
             </button>
+            <h1 className="text-lg font-bold text-textMain">拍照辨識</h1>
+          </div>
+        </div>
+
+        <div className="p-4">
+          {/* 說明 */}
+          <div className="bg-blue-50 rounded-xl p-3 mb-4 border border-blue-100">
+            <p className="text-xs text-blue-700 leading-relaxed">
+              <Camera size={12} className="inline mr-1" />
+              {isBooks
+                ? '拍攝或上傳書籍封面，AI 將自動辨識書名、作者等資訊。'
+                : '拍攝或上傳教具外盒，AI 將自動辨識名稱、品牌等資訊。'}
+            </p>
+          </div>
+
+          {/* 上傳區域 */}
+          {!photoPreview ? (
+            <div className="space-y-3">
+              {/* 拍照按鈕 */}
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full border-2 border-dashed border-blue-300 rounded-2xl p-8 flex flex-col items-center gap-3 text-blue-500 hover:border-blue-500 hover:bg-blue-50 transition-colors"
+              >
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                  <Camera size={32} />
+                </div>
+                <div className="text-center">
+                  <p className="font-medium">{isBooks ? '拍攝書籍封面' : '拍攝教具外盒'}</p>
+                  <p className="text-xs text-blue-400 mt-1">或從相簿選擇照片</p>
+                </div>
+              </button>
 
             <input
               ref={fileInputRef}
@@ -976,7 +1012,8 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
         )}
       </div>
     </div>
-  );
+    );
+  };
 
   // 渲染預建教材列表（根據 libraryTab 顯示書或教具）
   const renderAddPrebuilt = () => {
@@ -1221,9 +1258,9 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
             </div>
           )}
 
-          {/* 常用標籤 */}
+          {/* 常用標籤（書籍/教具不同） */}
           <div className="flex flex-wrap gap-2 mb-2">
-            {commonTags.filter(t => !customForm.tags.includes(t)).map((tag) => (
+            {(isBooks ? bookTags : toolTags).filter(t => !customForm.tags.includes(t)).map((tag) => (
               <button
                 key={tag}
                 onClick={() => addTag(tag)}
