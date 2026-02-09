@@ -35,7 +35,8 @@ interface MaterialsPageProps {
 }
 
 // 預建教材資料
-const prebuiltMaterials = [
+// 預建書籍（書庫用）
+const prebuiltBooks = [
   {
     id: 'jysw',
     name: 'JY Sight Word Readers',
@@ -68,6 +69,40 @@ const prebuiltMaterials = [
     subCategory: 'english',
     ageRange: '2-6歲',
     hasFullData: true,
+  },
+];
+
+// 預建教具（教具庫用）
+const prebuiltTools = [
+  {
+    id: 'logico',
+    name: 'LOGICO 邏輯狗',
+    shortName: 'LOGICO',
+    totalItems: 1,
+    description: '德國邏輯思維訓練教具',
+    categories: ['math', 'science'],
+    ageRange: '3-6歲',
+    hasFullData: false,
+  },
+  {
+    id: 'pattern_blocks',
+    name: '圖形積木',
+    shortName: '圖形積木',
+    totalItems: 1,
+    description: '幾何圖形認知與空間概念',
+    categories: ['math', 'art'],
+    ageRange: '2-6歲',
+    hasFullData: false,
+  },
+  {
+    id: 'magnetic_tiles',
+    name: '磁力片',
+    shortName: '磁力片',
+    totalItems: 1,
+    description: '立體建構與創意發想',
+    categories: ['engineering', 'art'],
+    ageRange: '3-8歲',
+    hasFullData: false,
   },
 ];
 
@@ -298,8 +333,8 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
     setViewMode('addCustom');
   };
 
-  // 新增預建教材
-  const addPrebuiltMaterial = (material: typeof prebuiltMaterials[0]) => {
+  // 新增預建教材（書或教具）
+  const addPrebuiltMaterial = (material: typeof prebuiltBooks[0] | typeof prebuiltTools[0]) => {
     if (myMaterials.find(m => m.id === material.id)) {
       alert('您已經加入這套教材了！');
       return;
@@ -311,7 +346,7 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
       shortName: material.shortName,
       totalItems: material.totalItems,
       categories: material.categories,
-      subCategory: material.subCategory,
+      subCategory: 'subCategory' in material ? material.subCategory : undefined,
       ageRange: material.ageRange,
       tags: [],
       notes: '',
@@ -720,46 +755,54 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
     </div>
   );
 
-  // 渲染選擇新增方式
-  const renderAddChoice = () => (
-    <div className="pb-20 bg-white">
-      <div className="bg-white sticky top-0 z-10 border-b border-gray-100">
-        <div className="flex items-center p-4">
-          <button onClick={() => setViewMode('library')} className="mr-3 p-1 -ml-1 rounded-lg hover:bg-gray-100">
-            <ChevronLeft size={24} className="text-textMain" />
-          </button>
-          <h1 className="text-lg font-bold text-textMain">新增教材</h1>
-        </div>
-      </div>
+  // 渲染選擇新增方式（根據 libraryTab 調整）
+  const renderAddChoice = () => {
+    const isBooks = libraryTab === 'books';
 
-      <div className="p-4 space-y-4">
-        <p className="text-sm text-textSub">選擇新增方式</p>
-
-        {/* 從預建庫選擇 */}
-        <button
-          onClick={() => setViewMode('addPrebuilt')}
-          className="w-full bg-cardBgSoft rounded-2xl p-4 border border-amber-100 text-left card-hover"
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-              <Sparkles className="text-accent" size={24} />
-            </div>
-            <div className="flex-1">
-              <h3 className="font-bold text-textMain">從教材庫選擇</h3>
-              <p className="text-xs text-textSub mt-0.5">
-                選擇預建教材，享有完整 AI 配對功能
-              </p>
-            </div>
-            <ChevronRight size={20} className="text-textSub" />
+    return (
+      <div className="pb-20 bg-white">
+        <div className="bg-white sticky top-0 z-10 border-b border-gray-100">
+          <div className="flex items-center p-4">
+            <button onClick={() => setViewMode('library')} className="mr-3 p-1 -ml-1 rounded-lg hover:bg-gray-100">
+              <ChevronLeft size={24} className="text-textMain" />
+            </button>
+            <h1 className="text-lg font-bold text-textMain">
+              {isBooks ? '新增書籍' : '新增教具'}
+            </h1>
           </div>
-        </button>
+        </div>
 
-        {/* 拍照辨識 */}
-        <button
-          onClick={() => setViewMode('addByPhoto')}
-          className="w-full bg-cardBgSoft rounded-2xl p-4 border border-amber-100 text-left card-hover"
-        >
-          <div className="flex items-center gap-4">
+        <div className="p-4 space-y-4">
+          <p className="text-sm text-textSub">選擇新增方式</p>
+
+          {/* 從預建庫選擇 */}
+          <button
+            onClick={() => setViewMode('addPrebuilt')}
+            className="w-full bg-cardBgSoft rounded-2xl p-4 border border-amber-100 text-left card-hover"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                {isBooks ? <BookOpen className="text-accent" size={24} /> : <Package className="text-accent" size={24} />}
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-textMain">
+                  {isBooks ? '從預建書庫選擇' : '從預建教具庫選擇'}
+                </h3>
+                <p className="text-xs text-textSub mt-0.5">
+                  {isBooks ? '選擇預建書籍，享有完整 AI 配對功能' : '選擇常見教具，快速加入'}
+                </p>
+              </div>
+              <ChevronRight size={20} className="text-textSub" />
+            </div>
+          </button>
+
+          {/* 拍照辨識（僅書庫顯示） */}
+          {isBooks && (
+            <button
+              onClick={() => setViewMode('addByPhoto')}
+              className="w-full bg-cardBgSoft rounded-2xl p-4 border border-amber-100 text-left card-hover"
+            >
+              <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
               <Camera className="text-blue-500" size={24} />
             </div>
@@ -769,31 +812,33 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
                 拍攝書籍封面，AI 自動填入資訊
               </p>
             </div>
-            <ChevronRight size={20} className="text-textSub" />
-          </div>
-        </button>
+              <ChevronRight size={20} className="text-textSub" />
+            </div>
+          </button>
+          )}
 
-        {/* 自訂新增 */}
-        <button
-          onClick={() => setViewMode('addCustom')}
-          className="w-full bg-cardBgSoft rounded-2xl p-4 border border-amber-100 text-left card-hover"
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-accent/20 rounded-xl flex items-center justify-center">
-              <Plus className="text-accent" size={24} />
+          {/* 自訂新增 */}
+          <button
+            onClick={() => setViewMode('addCustom')}
+            className="w-full bg-cardBgSoft rounded-2xl p-4 border border-amber-100 text-left card-hover"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-accent/20 rounded-xl flex items-center justify-center">
+                <Plus className="text-accent" size={24} />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-textMain">手動輸入</h3>
+                <p className="text-xs text-textSub mt-0.5">
+                  {isBooks ? '自行填寫書籍資訊' : '自行填寫教具資訊'}
+                </p>
+              </div>
+              <ChevronRight size={20} className="text-textSub" />
             </div>
-            <div className="flex-1">
-              <h3 className="font-bold text-textMain">手動輸入</h3>
-              <p className="text-xs text-textSub mt-0.5">
-                自行填寫教材資訊
-              </p>
-            </div>
-            <ChevronRight size={20} className="text-textSub" />
-          </div>
-        </button>
+          </button>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   // 渲染拍照辨識頁面
   const renderAddByPhoto = () => (
@@ -933,166 +978,188 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
     </div>
   );
 
-  // 渲染預建教材列表
-  const renderAddPrebuilt = () => (
-    <div className="pb-20 bg-white">
-      <div className="bg-white sticky top-0 z-10 border-b border-gray-100">
-        <div className="flex items-center p-4">
-          <button onClick={() => setViewMode('addChoice')} className="mr-3 p-1 -ml-1 rounded-lg hover:bg-gray-100">
-            <ChevronLeft size={24} className="text-textMain" />
-          </button>
-          <h1 className="text-lg font-bold text-textMain">預建教材庫</h1>
-        </div>
-      </div>
+  // 渲染預建教材列表（根據 libraryTab 顯示書或教具）
+  const renderAddPrebuilt = () => {
+    const isBooks = libraryTab === 'books';
+    const prebuiltList = isBooks ? prebuiltBooks : prebuiltTools;
 
-      <div className="p-4">
-        <div className="bg-purple-50 rounded-xl p-3 mb-4 border border-purple-100">
-          <p className="text-xs text-purple-700 leading-relaxed">
-            <Sparkles size={12} className="inline mr-1" />
-            預建教材包含完整書目資料，可享有 AI 自動配對、學習計劃產生等功能。
-          </p>
-        </div>
-
-        <div className="space-y-3">
-          {prebuiltMaterials.map((material) => {
-            const isAdded = myMaterials.some(m => m.id === material.id);
-
-            return (
-              <div
-                key={material.id}
-                className={`bg-cardBgSoft rounded-2xl p-4 border ${isAdded ? 'border-green-300 bg-green-50' : 'border-amber-100'}`}
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center">
-                    {materialIcons[material.id] || materialIcons.default}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-bold text-textMain">{material.shortName}</h3>
-                      <span className="text-xs bg-white text-textSub px-2 py-0.5 rounded-full border border-gray-200">
-                        {material.totalItems}本
-                      </span>
-                    </div>
-                    <p className="text-xs text-textSub mt-0.5">{material.description}</p>
-                    <p className="text-xs text-textSub">{material.ageRange}</p>
-                  </div>
-                  {isAdded ? (
-                    <span className="text-xs text-green-600 font-medium">已加入</span>
-                  ) : (
-                    <button
-                      onClick={() => addPrebuiltMaterial(material)}
-                      className="bg-accent text-white px-4 py-2 rounded-xl text-sm font-medium"
-                    >
-                      加入
-                    </button>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="text-center py-6">
-          <p className="text-xs text-textSub">更多教材持續新增中...</p>
-        </div>
-      </div>
-    </div>
-  );
-
-  // 渲染自訂新增表單
-  const renderAddCustom = () => (
-    <div className="pb-20 bg-white">
-      <div className="bg-white sticky top-0 z-10 border-b border-gray-100">
-        <div className="flex items-center justify-between p-4">
-          <div className="flex items-center">
+    return (
+      <div className="pb-20 bg-white">
+        <div className="bg-white sticky top-0 z-10 border-b border-gray-100">
+          <div className="flex items-center p-4">
             <button onClick={() => setViewMode('addChoice')} className="mr-3 p-1 -ml-1 rounded-lg hover:bg-gray-100">
               <ChevronLeft size={24} className="text-textMain" />
             </button>
-            <h1 className="text-lg font-bold text-textMain">自訂新增</h1>
+            <h1 className="text-lg font-bold text-textMain">
+              {isBooks ? '預建書庫' : '預建教具庫'}
+            </h1>
           </div>
-          <button
-            onClick={addCustomMaterial}
-            className="bg-accent text-white px-4 py-2 rounded-xl text-sm font-medium"
-          >
-            儲存
-          </button>
-        </div>
-      </div>
-
-      <div className="p-4 space-y-4">
-        {/* 教材名稱 */}
-        <div>
-          <label className="block text-sm font-medium text-textMain mb-2">
-            教材名稱 <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            value={customForm.name}
-            onChange={(e) => setCustomForm({ ...customForm, name: e.target.value })}
-            placeholder="例如：小熊繪本系列"
-            className="w-full px-4 py-3 bg-cardBgSoft rounded-xl text-sm border border-amber-100 focus:outline-none focus:ring-2 focus:ring-accent"
-          />
         </div>
 
-        {/* 本數 */}
-        <div>
-          <label className="block text-sm font-medium text-textMain mb-2">本數</label>
-          <input
-            type="number"
-            value={customForm.totalItems}
-            onChange={(e) => setCustomForm({ ...customForm, totalItems: e.target.value })}
-            placeholder="例如：12"
-            className="w-full px-4 py-3 bg-cardBgSoft rounded-xl text-sm border border-amber-100 focus:outline-none focus:ring-2 focus:ring-accent"
-          />
-        </div>
+        <div className="p-4">
+          <div className="bg-purple-50 rounded-xl p-3 mb-4 border border-purple-100">
+            <p className="text-xs text-purple-700 leading-relaxed">
+              <Sparkles size={12} className="inline mr-1" />
+              {isBooks
+                ? '預建書籍包含完整書目資料，可享有 AI 自動配對、學習計劃產生等功能。'
+                : '預建教具可快速加入常見教具，方便追蹤使用紀錄。'}
+            </p>
+          </div>
 
-        {/* 分類（可多選） */}
-        <div>
-          <label className="block text-sm font-medium text-textMain mb-2">
-            分類 <span className="text-xs text-textSub font-normal">（可多選）</span>
-          </label>
-          <div className="flex flex-wrap gap-2">
-            {categoryOptions.map((cat) => {
-              const isSelected = customForm.categories.includes(cat.value);
+          <div className="space-y-3">
+            {prebuiltList.map((material) => {
+              const isAdded = myMaterials.some(m => m.id === material.id);
+
               return (
-                <button
-                  key={cat.value}
-                  onClick={() => {
-                    if (isSelected) {
-                      // 取消選擇（至少保留一個分類）
-                      if (customForm.categories.length > 1) {
-                        setCustomForm({
-                          ...customForm,
-                          categories: customForm.categories.filter(c => c !== cat.value)
-                        });
-                      }
-                    } else {
-                      // 新增選擇
-                      setCustomForm({
-                        ...customForm,
-                        categories: [...customForm.categories, cat.value]
-                      });
-                    }
-                  }}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-colors ${
-                    isSelected
-                      ? 'bg-accent text-white'
-                      : 'bg-cardBgSoft text-textSub border border-gray-200'
-                  }`}
+                <div
+                  key={material.id}
+                  className={`bg-cardBgSoft rounded-2xl p-4 border ${isAdded ? 'border-green-300 bg-green-50' : 'border-amber-100'}`}
                 >
-                  {categoryIcons[cat.value]}
-                  {cat.label}
-                </button>
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center">
+                      {isBooks
+                        ? (materialIcons[material.id] || materialIcons.default)
+                        : <Package size={20} className="text-accent" />}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-bold text-textMain">{material.shortName || material.name}</h3>
+                        {isBooks && (
+                          <span className="text-xs bg-white text-textSub px-2 py-0.5 rounded-full border border-gray-200">
+                            {material.totalItems}本
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-textSub mt-0.5">{material.description}</p>
+                      <p className="text-xs text-textSub">{material.ageRange}</p>
+                    </div>
+                    {isAdded ? (
+                      <span className="text-xs text-green-600 font-medium">已加入</span>
+                    ) : (
+                      <button
+                        onClick={() => addPrebuiltMaterial(material)}
+                        className="bg-accent text-white px-4 py-2 rounded-xl text-sm font-medium"
+                      >
+                        加入
+                      </button>
+                    )}
+                  </div>
+                </div>
               );
             })}
           </div>
-          {customForm.categories.length > 1 && (
-            <p className="text-xs text-accent mt-2">已選擇 {customForm.categories.length} 個分類</p>
-          )}
+
+          <div className="text-center py-6">
+            <p className="text-xs text-textSub">
+              {isBooks ? '更多書籍持續新增中...' : '更多教具持續新增中...'}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // 渲染自訂新增表單（根據 libraryTab 調整欄位）
+  const renderAddCustom = () => {
+    const isBooks = libraryTab === 'books';
+
+    return (
+      <div className="pb-20 bg-white">
+        <div className="bg-white sticky top-0 z-10 border-b border-gray-100">
+          <div className="flex items-center justify-between p-4">
+            <div className="flex items-center">
+              <button onClick={() => setViewMode('addChoice')} className="mr-3 p-1 -ml-1 rounded-lg hover:bg-gray-100">
+                <ChevronLeft size={24} className="text-textMain" />
+              </button>
+              <h1 className="text-lg font-bold text-textMain">
+                {isBooks ? '自訂新增書籍' : '自訂新增教具'}
+              </h1>
+            </div>
+            <button
+              onClick={addCustomMaterial}
+              className="bg-accent text-white px-4 py-2 rounded-xl text-sm font-medium"
+            >
+              儲存
+            </button>
+          </div>
         </div>
 
-        {/* 語言子分類（僅在選擇語言時顯示） */}
-        {customForm.categories.includes('language') && (
+        <div className="p-4 space-y-4">
+          {/* 名稱 */}
+          <div>
+            <label className="block text-sm font-medium text-textMain mb-2">
+              {isBooks ? '書名' : '教具名稱'} <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              value={customForm.name}
+              onChange={(e) => setCustomForm({ ...customForm, name: e.target.value })}
+              placeholder={isBooks ? '例如：小熊繪本系列' : '例如：邏輯狗'}
+              className="w-full px-4 py-3 bg-cardBgSoft rounded-xl text-sm border border-amber-100 focus:outline-none focus:ring-2 focus:ring-accent"
+            />
+          </div>
+
+          {/* 本數（僅書庫顯示） */}
+          {isBooks && (
+            <div>
+              <label className="block text-sm font-medium text-textMain mb-2">本數</label>
+              <input
+                type="number"
+                value={customForm.totalItems}
+                onChange={(e) => setCustomForm({ ...customForm, totalItems: e.target.value })}
+                placeholder="例如：12"
+                className="w-full px-4 py-3 bg-cardBgSoft rounded-xl text-sm border border-amber-100 focus:outline-none focus:ring-2 focus:ring-accent"
+              />
+            </div>
+          )}
+
+          {/* 分類（可多選） */}
+          <div>
+            <label className="block text-sm font-medium text-textMain mb-2">
+              分類 <span className="text-xs text-textSub font-normal">（可多選）</span>
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {categoryOptions
+                .filter(cat => isBooks ? true : cat.value !== 'language')
+                .map((cat) => {
+                  const isSelected = customForm.categories.includes(cat.value);
+                  return (
+                    <button
+                      key={cat.value}
+                      onClick={() => {
+                        if (isSelected) {
+                          if (customForm.categories.length > 1) {
+                            setCustomForm({
+                              ...customForm,
+                              categories: customForm.categories.filter(c => c !== cat.value)
+                            });
+                          }
+                        } else {
+                          setCustomForm({
+                            ...customForm,
+                            categories: [...customForm.categories, cat.value]
+                          });
+                        }
+                      }}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-colors ${
+                        isSelected
+                          ? 'bg-accent text-white'
+                          : 'bg-cardBgSoft text-textSub border border-gray-200'
+                      }`}
+                    >
+                      {categoryIcons[cat.value]}
+                      {cat.label}
+                    </button>
+                  );
+                })}
+            </div>
+            {customForm.categories.length > 1 && (
+              <p className="text-xs text-accent mt-2">已選擇 {customForm.categories.length} 個分類</p>
+            )}
+          </div>
+
+          {/* 語言子分類（僅書庫且選擇語言時顯示） */}
+          {isBooks && customForm.categories.includes('language') && (
           <div>
             <label className="block text-sm font-medium text-textMain mb-2">語言類型</label>
             <div className="flex flex-wrap gap-2">
@@ -1192,14 +1259,15 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
           <textarea
             value={customForm.notes}
             onChange={(e) => setCustomForm({ ...customForm, notes: e.target.value })}
-            placeholder="例如：每本都有重複句型，適合初學者..."
+            placeholder={isBooks ? '例如：每本都有重複句型，適合初學者...' : '例如：可訓練邏輯思維...'}
             rows={3}
             className="w-full px-4 py-3 bg-cardBgSoft rounded-xl text-sm border border-amber-100 focus:outline-none focus:ring-2 focus:ring-accent resize-none"
           />
         </div>
       </div>
     </div>
-  );
+    );
+  };
 
   // 渲染教材詳情
   const renderDetail = () => {
