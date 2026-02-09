@@ -11,6 +11,8 @@ import pairingsData from '../../data/pairings.json';
 import jyswData from '../../data/materials_jysw.json';
 import flrData from '../../data/materials_flr.json';
 import jprData from '../../data/materials_jpr.json';
+// 匯入教具資料
+import lukData from '../../data/tools_luk.json';
 
 // Icon 映射
 const categoryIcons: Record<string, React.ReactNode> = {
@@ -78,11 +80,12 @@ const prebuiltTools = [
     id: 'luk',
     name: 'LUK 洛可腦力開發',
     shortName: 'LUK',
-    totalItems: 1,
+    totalItems: 9,
     description: '德國邏輯思維訓練教具',
     categories: ['math', 'science'],
-    ageRange: '3-8歲',
-    hasFullData: false,
+    ageRange: '2-99歲',
+    hasFullData: true,
+    hasSeries: true, // 有子系列可選
   },
   {
     id: '康軒桌遊',
@@ -219,6 +222,9 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
   const [showAddPairing, setShowAddPairing] = useState(false);
   const [pairingStep, setPairingStep] = useState<'selectSet' | 'selectItem' | 'addReason'>('selectSet');
   const [pendingPairing, setPendingPairing] = useState<Partial<UserPairing>>({});
+
+  // 教具系列展開狀態
+  const [expandedTool, setExpandedTool] = useState<string | null>(null);
 
   // 自訂語言子分類
   const [customLanguages, setCustomLanguages] = useState<{ id: string; label: string }[]>([]);
@@ -1044,43 +1050,112 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
           </div>
 
           <div className="space-y-3">
-            {prebuiltList.map((material) => {
+            {prebuiltList.map((material: any) => {
               const isAdded = myMaterials.some(m => m.id === material.id);
+              const hasSeries = !isBooks && material.hasSeries;
+              const isExpanded = expandedTool === material.id;
+
+              // 取得該教具的系列資料
+              const getSeriesData = () => {
+                if (material.id === 'luk') return lukData.series;
+                return [];
+              };
 
               return (
-                <div
-                  key={material.id}
-                  className={`bg-cardBgSoft rounded-2xl p-4 border ${isAdded ? 'border-green-300 bg-green-50' : 'border-amber-100'}`}
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center">
-                      {isBooks
-                        ? (materialIcons[material.id] || materialIcons.default)
-                        : <Package size={20} className="text-accent" />}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-bold text-textMain">{material.shortName || material.name}</h3>
-                        {isBooks && (
-                          <span className="text-xs bg-white text-textSub px-2 py-0.5 rounded-full border border-gray-200">
-                            {material.totalItems}本
-                          </span>
-                        )}
+                <div key={material.id}>
+                  <div
+                    className={`bg-cardBgSoft rounded-2xl p-4 border ${isAdded ? 'border-green-300 bg-green-50' : 'border-amber-100'} ${hasSeries ? 'cursor-pointer' : ''}`}
+                    onClick={() => hasSeries && setExpandedTool(isExpanded ? null : material.id)}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center">
+                        {isBooks
+                          ? (materialIcons[material.id] || materialIcons.default)
+                          : <Package size={20} className="text-accent" />}
                       </div>
-                      <p className="text-xs text-textSub mt-0.5">{material.description}</p>
-                      <p className="text-xs text-textSub">{material.ageRange}</p>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-bold text-textMain">{material.shortName || material.name}</h3>
+                          {isBooks && (
+                            <span className="text-xs bg-white text-textSub px-2 py-0.5 rounded-full border border-gray-200">
+                              {material.totalItems}本
+                            </span>
+                          )}
+                          {hasSeries && (
+                            <span className="text-xs bg-accent/10 text-accent px-2 py-0.5 rounded-full">
+                              {material.totalItems} 系列
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-textSub mt-0.5">{material.description}</p>
+                        <p className="text-xs text-textSub">{material.ageRange}</p>
+                      </div>
+                      {hasSeries ? (
+                        <ChevronRight size={20} className={`text-textSub transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                      ) : isAdded ? (
+                        <span className="text-xs text-green-600 font-medium">已加入</span>
+                      ) : (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); addPrebuiltMaterial(material); }}
+                          className="bg-accent text-white px-4 py-2 rounded-xl text-sm font-medium"
+                        >
+                          加入
+                        </button>
+                      )}
                     </div>
-                    {isAdded ? (
-                      <span className="text-xs text-green-600 font-medium">已加入</span>
-                    ) : (
-                      <button
-                        onClick={() => addPrebuiltMaterial(material)}
-                        className="bg-accent text-white px-4 py-2 rounded-xl text-sm font-medium"
-                      >
-                        加入
-                      </button>
-                    )}
                   </div>
+
+                  {/* 展開的系列列表 */}
+                  {hasSeries && isExpanded && (
+                    <div className="ml-4 mt-2 space-y-2">
+                      {getSeriesData().map((series: any) => {
+                        const seriesId = `${material.id}_${series.id}`;
+                        const seriesAdded = myMaterials.some(m => m.id === seriesId);
+                        return (
+                          <div
+                            key={series.id}
+                            className={`bg-white rounded-xl p-3 border ${seriesAdded ? 'border-green-300 bg-green-50' : 'border-gray-200'}`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 bg-accent/10 rounded-lg flex items-center justify-center">
+                                <span className="text-xs font-bold text-accent">{series.code}</span>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="text-sm font-medium text-textMain">{series.name}</h4>
+                                <p className="text-xs text-textSub">{series.description}</p>
+                                <p className="text-xs text-textSub">{series.ageRange} · {series.totalItems}本</p>
+                              </div>
+                              {seriesAdded ? (
+                                <span className="text-xs text-green-600 font-medium">已加入</span>
+                              ) : (
+                                <button
+                                  onClick={() => {
+                                    const newMaterial: UserMaterial = {
+                                      id: seriesId,
+                                      name: `LUK ${series.code} ${series.name}`,
+                                      shortName: `LUK ${series.code}`,
+                                      totalItems: series.totalItems,
+                                      categories: ['math', 'science'],
+                                      ageRange: series.ageRange,
+                                      tags: ['邏輯', '專注力'],
+                                      notes: series.requiresBoard ? `需搭配${series.requiresBoard}操作板` : '',
+                                      isPrebuilt: true,
+                                      progress: 0,
+                                      readCount: 0,
+                                    };
+                                    setMyMaterials([...myMaterials, newMaterial]);
+                                  }}
+                                  className="bg-accent text-white px-3 py-1.5 rounded-lg text-xs font-medium"
+                                >
+                                  加入
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               );
             })}

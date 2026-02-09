@@ -1,0 +1,96 @@
+{
+  "tool": {
+    "id": "luk",
+    "name": "LUK 洛可腦力開發",
+    "shortName": "LUK",
+    "brand": "德國 LUK",
+    "category": "邏輯教具",
+    "description": "德國邏輯思維訓練教具，全球第一套會思考的邏輯書",
+    "ageRangeMin": 2,
+    "ageRangeMax": 99,
+    "isBuiltIn": true
+  },
+  "series": [
+    {
+      "id": "va",
+      "code": "VA",
+      "name": "班比諾翻翻書系列",
+      "description": "學齡前翻翻書自學系列，無須操作板",
+      "ageRange": "2-5歲",
+      "totalItems": 7,
+      "requiresBoard": false
+    },
+    {
+      "id": "vb",
+      "code": "VB",
+      "name": "班比諾系列",
+      "description": "幼兒園指定教材，需搭配6塊式操作板",
+      "ageRange": "2-6歲",
+      "totalItems": 30,
+      "requiresBoard": "6片式"
+    },
+    {
+      "id": "vp",
+      "code": "VP",
+      "name": "口袋書系列",
+      "description": "全球第一套會思考的邏輯書",
+      "ageRange": "4-8歲",
+      "totalItems": 7,
+      "requiresBoard": false
+    },
+    {
+      "id": "vc",
+      "code": "VC",
+      "name": "黃系列（初級）",
+      "description": "初級綜合訓練，需12塊式操作板",
+      "ageRange": "4-6歲",
+      "totalItems": 12,
+      "requiresBoard": "12片式"
+    },
+    {
+      "id": "vd",
+      "code": "VD",
+      "name": "黃系列（進階）",
+      "description": "初級綜合訓練，需12塊式操作板",
+      "ageRange": "6-8歲",
+      "totalItems": 12,
+      "requiresBoard": "12片式"
+    },
+    {
+      "id": "ve",
+      "code": "VE",
+      "name": "綠系列（智力測驗）",
+      "description": "中級智力測驗訓練，需12塊式操作板",
+      "ageRange": "5-8歲",
+      "totalItems": 12,
+      "requiresBoard": "12片式"
+    },
+    {
+      "id": "vx",
+      "code": "VX",
+      "name": "綠系列（邏輯思考）",
+      "description": "中級邏輯思考訓練，需12塊式操作板",
+      "ageRange": "4-14歲",
+      "totalItems": 11,
+      "requiresBoard": "12片式"
+    },
+    {
+      "id": "vda",
+      "code": "VDA",
+      "name": "藍系列（高級綜合）",
+      "description": "高級綜合訓練，需12塊式操作板",
+      "ageRange": "6-9歲",
+      "totalItems": 12,
+      "requiresBoard": "12片式"
+    },
+    {
+      "id": "vdb",
+      "code": "VDB",
+      "name": "藍系列（高級邏輯）",
+      "description": "高級邏輯訓練，需12塊式操作板",
+      "ageRange": "6-99歲",
+      "totalItems": 12,
+      "requiresBoard": "12片式"
+    }
+  ]
+}
