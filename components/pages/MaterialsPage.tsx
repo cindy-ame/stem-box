@@ -2170,6 +2170,23 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
       }
     };
 
+    // 根據類型產生項目列表
+    const getItemsForMaterial = () => {
+      // 教具系列：產生編號項目
+      if (isToolSeries) {
+        return Array.from({ length: selectedMaterial.totalItems }, (_, i) => ({
+          id: i + 1,
+          title: `第 ${i + 1} 本`,
+          completed: i < selectedMaterial.progress,
+        }));
+      }
+      // 書籍：使用範例資料（之後可從 JSON 載入真實書目）
+      return sampleBooks;
+    };
+
+    const items = getItemsForMaterial();
+    const itemLabel = isToolSeries ? '本' : '本';
+
     // 書籍/教具系列的情況：顯示書目網格
     return (
       <div className="pb-20 bg-white">
@@ -2180,43 +2197,41 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
             </button>
             <div>
               <h1 className="text-lg font-bold text-textMain">{selectedMaterial.shortName || selectedMaterial.name}</h1>
-              <p className="text-xs text-textSub">{selectedMaterial.progress}/{selectedMaterial.totalItems} 本已完成</p>
+              <p className="text-xs text-textSub">{selectedMaterial.progress}/{selectedMaterial.totalItems} {itemLabel}已完成</p>
             </div>
           </div>
         </div>
 
         <div className="p-4">
           <div className="grid grid-cols-3 gap-3">
-            {sampleBooks.map((book) => (
+            {items.map((item) => (
               <div
-                key={book.id}
+                key={item.id}
                 className={`relative rounded-xl overflow-hidden border-2 ${
-                  book.completed ? 'border-accent' : 'border-gray-200'
+                  item.completed ? 'border-accent' : 'border-gray-200'
                 }`}
               >
                 <div className="aspect-[3/4] bg-gradient-to-br from-amber-50 to-amber-100 flex items-center justify-center">
                   <div className="text-center px-2">
-                    <Book size={24} className="text-accent/40 mx-auto mb-1" />
-                    <p className="text-xs text-textSub font-medium leading-tight">{book.title}</p>
+                    {isToolSeries ? (
+                      <Package size={24} className="text-accent/40 mx-auto mb-1" />
+                    ) : (
+                      <Book size={24} className="text-accent/40 mx-auto mb-1" />
+                    )}
+                    <p className="text-xs text-textSub font-medium leading-tight">{item.title}</p>
                   </div>
                 </div>
-                {book.completed && (
+                {item.completed && (
                   <div className="absolute top-1 right-1 w-5 h-5 bg-accent rounded-full flex items-center justify-center">
                     <Check size={12} className="text-white" />
                   </div>
                 )}
                 <div className="absolute bottom-1 left-1 bg-black/50 text-white text-xs px-1.5 py-0.5 rounded">
-                  #{book.id}
+                  #{item.id}
                 </div>
               </div>
             ))}
           </div>
-
-          {selectedMaterial.totalItems > sampleBooks.length && (
-            <p className="text-center text-xs text-textSub mt-4">
-              顯示 {sampleBooks.length} / {selectedMaterial.totalItems} 本
-            </p>
-          )}
         </div>
       </div>
     );
