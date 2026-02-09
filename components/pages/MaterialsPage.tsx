@@ -743,12 +743,114 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-x-4 gap-y-6">
-            {filteredMaterials.map((material) => {
-              const progressPercent = material.totalItems > 0
-                ? Math.round((material.progress / material.totalItems) * 100)
-                : 0;
+            {(() => {
+              // 教具庫：將同品牌的教具組合顯示
+              if (libraryTab === 'materials') {
+                // 定義品牌分組
+                const toolBrands: Record<string, { name: string; shortName: string; prefix: string }> = {
+                  luk: { name: 'LUK 洛可腦力開發', shortName: 'LUK', prefix: 'luk_' },
+                  smart_games: { name: 'Smart Games', shortName: 'Smart Games', prefix: 'smart_games_' },
+                  learning_resources: { name: 'Learning Resources', shortName: 'LR', prefix: 'learning_resources_' },
+                  康軒桌遊: { name: '小康軒桌遊系列', shortName: '小康軒', prefix: '康軒桌遊_' },
+                };
 
-              return (
+                // 組合同品牌的教具
+                const brandGroups: Record<string, UserMaterial[]> = {};
+                const standalone: UserMaterial[] = [];
+
+                filteredMaterials.forEach(m => {
+                  let matched = false;
+                  for (const [brandId, brand] of Object.entries(toolBrands)) {
+                    if (m.id.startsWith(brand.prefix) || m.id === brandId) {
+                      if (!brandGroups[brandId]) brandGroups[brandId] = [];
+                      brandGroups[brandId].push(m);
+                      matched = true;
+                      break;
+                    }
+                  }
+                  if (!matched) standalone.push(m);
+                });
+
+                // 渲染品牌分組
+                const items: React.ReactNode[] = [];
+
+                Object.entries(brandGroups).forEach(([brandId, materials]) => {
+                  const brand = toolBrands[brandId];
+                  const totalProgress = materials.reduce((sum, m) => sum + m.progress, 0);
+                  const totalItems = materials.reduce((sum, m) => sum + m.totalItems, 0);
+
+                  items.push(
+                    <button
+                      key={brandId}
+                      onClick={() => {
+                        // 點進品牌詳情頁
+                        setSelectedMaterial({
+                          id: brandId,
+                          name: brand.name,
+                          shortName: brand.shortName,
+                          totalItems: totalItems,
+                          categories: ['math', 'science'],
+                          ageRange: materials[0]?.ageRange || '',
+                          tags: ['邏輯', '專注力'],
+                          notes: '',
+                          isPrebuilt: true,
+                          progress: totalProgress,
+                          readCount: 0,
+                        });
+                        setViewMode('detail');
+                      }}
+                      className="text-left"
+                    >
+                      <div className="mb-2">
+                        <div className="aspect-square flex items-center justify-center bg-accent/5 rounded-xl">
+                          <Package size={48} className="text-accent/40" />
+                        </div>
+                      </div>
+                      <h3 className="font-medium text-textMain text-sm text-center leading-tight line-clamp-1">
+                        {brand.shortName}
+                      </h3>
+                      <p className="text-xs text-textSub text-center mt-0.5">
+                        {materials.length} 系列
+                      </p>
+                    </button>
+                  );
+                });
+
+                // 加入獨立教具
+                standalone.forEach(material => {
+                  items.push(
+                    <button
+                      key={material.id}
+                      onClick={() => {
+                        setSelectedMaterial(material);
+                        setViewMode('detail');
+                      }}
+                      className="text-left"
+                    >
+                      <div className="mb-2">
+                        {material.coverImage ? (
+                          <img src={material.coverImage} alt={material.name} className="w-full h-auto rounded-lg" />
+                        ) : (
+                          <div className="aspect-square flex items-center justify-center bg-accent/5 rounded-xl">
+                            <Package size={48} className="text-accent/40" />
+                          </div>
+                        )}
+                      </div>
+                      <h3 className="font-medium text-textMain text-sm text-center leading-tight line-clamp-1">
+                        {material.shortName || material.name}
+                      </h3>
+                      <p className="text-xs text-textSub text-center mt-0.5">
+                        {material.totalItems > 1 ? `${material.progress}/${material.totalItems}` : `已用 ${material.readCount} 次`}
+                      </p>
+                    </button>
+                  );
+                });
+
+                return items;
+              }
+
+              // 書庫：正常顯示
+              return filteredMaterials.map((material) => (
                 <button
                   key={material.id}
                   onClick={() => {
@@ -757,36 +859,24 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
                   }}
                   className="text-left"
                 >
-                  {/* 封面圖片 - 自然比例 */}
                   <div className="mb-2">
                     {material.coverImage ? (
-                      <img
-                        src={material.coverImage}
-                        alt={material.name}
-                        className="w-full h-auto rounded-lg"
-                      />
+                      <img src={material.coverImage} alt={material.name} className="w-full h-auto rounded-lg" />
                     ) : (
                       <div className="aspect-square flex items-center justify-center">
                         <Book size={64} className="text-accent/40" />
                       </div>
                     )}
                   </div>
-
-                  {/* 標題 */}
                   <h3 className="font-medium text-textMain text-sm text-center leading-tight line-clamp-1">
                     {material.shortName || material.name}
                   </h3>
-
-                  {/* 進度指示 - 統一格式 */}
                   <p className="text-xs text-textSub text-center mt-0.5">
-                    {material.totalItems > 1
-                      ? `${material.progress}/${material.totalItems}`
-                      : `已讀 ${material.readCount} 次`
-                    }
+                    {material.totalItems > 1 ? `${material.progress}/${material.totalItems}` : `已讀 ${material.readCount} 次`}
                   </p>
                 </button>
-              );
-            })}
+              ));
+            })()}
           </div>
         )}
       </div>
@@ -1955,10 +2045,76 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
     { id: 8, title: 'We Like', completed: false },
   ];
 
-  // 渲染書目列表
+  // 渲染書目/教具系列列表
   const renderBookList = () => {
     if (!selectedMaterial) return null;
 
+    // 教具品牌分組的情況：顯示該品牌下的所有系列
+    const toolBrandPrefixes: Record<string, string> = {
+      luk: 'luk_',
+      smart_games: 'smart_games_',
+      learning_resources: 'learning_resources_',
+      康軒桌遊: '康軒桌遊_',
+    };
+
+    const brandPrefix = toolBrandPrefixes[selectedMaterial.id];
+    const isToolBrand = brandPrefix !== undefined;
+
+    if (isToolBrand) {
+      // 找出該品牌下使用者已加入的所有系列
+      const brandMaterials = myMaterials.filter(m =>
+        m.id.startsWith(brandPrefix) || m.id === selectedMaterial.id
+      );
+
+      return (
+        <div className="pb-20 bg-white">
+          <div className="bg-white sticky top-0 z-10 border-b border-gray-100">
+            <div className="flex items-center p-4">
+              <button onClick={() => setViewMode('library')} className="mr-3 p-1 -ml-1 rounded-lg hover:bg-gray-100">
+                <ChevronLeft size={24} className="text-textMain" />
+              </button>
+              <div>
+                <h1 className="text-lg font-bold text-textMain">{selectedMaterial.shortName || selectedMaterial.name}</h1>
+                <p className="text-xs text-textSub">{brandMaterials.length} 個系列</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-4 space-y-3">
+            {brandMaterials.map((material) => (
+              <button
+                key={material.id}
+                onClick={() => {
+                  setSelectedMaterial(material);
+                  setViewMode('detail');
+                }}
+                className="w-full bg-cardBgSoft rounded-2xl p-4 border border-amber-100 text-left"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center">
+                    <span className="text-sm font-bold text-accent">
+                      {material.shortName?.replace('LUK ', '') || material.name.slice(0, 2)}
+                    </span>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-medium text-textMain">{material.name}</h3>
+                    <p className="text-xs text-textSub mt-0.5">
+                      {material.ageRange} · {material.progress}/{material.totalItems} 完成
+                    </p>
+                    {material.notes && (
+                      <p className="text-xs text-accent/70 mt-0.5">{material.notes}</p>
+                    )}
+                  </div>
+                  <ChevronRight size={20} className="text-textSub" />
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // 書籍的情況：顯示書目網格
     return (
       <div className="pb-20 bg-white">
         <div className="bg-white sticky top-0 z-10 border-b border-gray-100">
@@ -1973,7 +2129,6 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
           </div>
         </div>
 
-        {/* 書目網格 */}
         <div className="p-4">
           <div className="grid grid-cols-3 gap-3">
             {sampleBooks.map((book) => (
@@ -1983,22 +2138,17 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
                   book.completed ? 'border-accent' : 'border-gray-200'
                 }`}
               >
-                {/* 書籍封面佔位 */}
                 <div className="aspect-[3/4] bg-gradient-to-br from-amber-50 to-amber-100 flex items-center justify-center">
                   <div className="text-center px-2">
                     <Book size={24} className="text-accent/40 mx-auto mb-1" />
                     <p className="text-xs text-textSub font-medium leading-tight">{book.title}</p>
                   </div>
                 </div>
-
-                {/* 完成標記 */}
                 {book.completed && (
                   <div className="absolute top-1 right-1 w-5 h-5 bg-accent rounded-full flex items-center justify-center">
                     <Check size={12} className="text-white" />
                   </div>
                 )}
-
-                {/* 書籍編號 */}
                 <div className="absolute bottom-1 left-1 bg-black/50 text-white text-xs px-1.5 py-0.5 rounded">
                   #{book.id}
                 </div>
@@ -2006,7 +2156,6 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
             ))}
           </div>
 
-          {/* 載入更多提示 */}
           {selectedMaterial.totalItems > sampleBooks.length && (
             <p className="text-center text-xs text-textSub mt-4">
               顯示 {sampleBooks.length} / {selectedMaterial.totalItems} 本
