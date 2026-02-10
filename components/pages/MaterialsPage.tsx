@@ -231,10 +231,14 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
     id: number;
     title: string;
     completed: boolean;
+    image?: string;
   }
   const [customItems, setCustomItems] = useState<Record<string, MaterialItem[]>>({});
   const [isEditingItems, setIsEditingItems] = useState(false);
+  const [showAddItemModal, setShowAddItemModal] = useState(false);
   const [newItemTitle, setNewItemTitle] = useState('');
+  const [newItemImage, setNewItemImage] = useState<string | null>(null);
+  const newItemImageRef = useRef<HTMLInputElement>(null);
 
   // 自訂語言子分類
   const [customLanguages, setCustomLanguages] = useState<{ id: string; label: string }[]>([]);
@@ -2206,24 +2210,42 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
 
     // 新增項目
     const handleAddItem = () => {
+      if (!newItemTitle.trim()) return;
+
       const materialId = selectedMaterial.id;
       const currentItems = customItems[materialId] || items;
       const newId = currentItems.length > 0 ? Math.max(...currentItems.map(i => i.id)) + 1 : 1;
       const newItem: MaterialItem = {
         id: newId,
-        title: newItemTitle || `第 ${newId} 本`,
+        title: newItemTitle.trim(),
         completed: false,
+        image: newItemImage || undefined,
       };
       setCustomItems({
         ...customItems,
         [materialId]: [...currentItems, newItem],
       });
-      setNewItemTitle('');
       // 更新教材的 totalItems
       const updatedMaterials = myMaterials.map(m =>
         m.id === materialId ? { ...m, totalItems: currentItems.length + 1 } : m
       );
       setMyMaterials(updatedMaterials);
+      // 重置並關閉彈窗
+      setNewItemTitle('');
+      setNewItemImage(null);
+      setShowAddItemModal(false);
+    };
+
+    // 處理圖片上傳
+    const handleItemImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setNewItemImage(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      }
     };
 
     // 刪除項目
@@ -2295,15 +2317,21 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
                   item.completed ? 'border-accent' : 'border-gray-200'
                 }`}
               >
-                <div className="aspect-[3/4] bg-gradient-to-br from-amber-50 to-amber-100 flex items-center justify-center">
-                  <div className="text-center px-2">
-                    {isToolSeries ? (
-                      <Package size={24} className="text-accent/40 mx-auto mb-1" />
-                    ) : (
-                      <Book size={24} className="text-accent/40 mx-auto mb-1" />
-                    )}
-                    <p className="text-xs text-textSub font-medium leading-tight">{item.title}</p>
-                  </div>
+                <div className="aspect-[3/4] bg-gradient-to-br from-amber-50 to-amber-100 flex items-center justify-center overflow-hidden">
+                  {item.image ? (
+                    <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="text-center px-2">
+                      {isToolSeries ? (
+                        <Package size={24} className="text-accent/40 mx-auto mb-1" />
+                      ) : (
+                        <Book size={24} className="text-accent/40 mx-auto mb-1" />
+                      )}
+                    </div>
+                  )}
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-1.5">
+                  <p className="text-xs text-white font-medium leading-tight truncate">{item.title}</p>
                 </div>
                 {item.completed && !isEditingItems && (
                   <div className="absolute top-1 right-1 w-5 h-5 bg-accent rounded-full flex items-center justify-center">
@@ -2318,15 +2346,12 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
                     <X size={12} className="text-white" />
                   </button>
                 )}
-                <div className="absolute bottom-1 left-1 bg-black/50 text-white text-xs px-1.5 py-0.5 rounded">
-                  #{item.id}
-                </div>
               </div>
             ))}
 
             {/* 新增項目按鈕 */}
             <button
-              onClick={() => handleAddItem()}
+              onClick={() => setShowAddItemModal(true)}
               className="aspect-[3/4] rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center hover:border-accent hover:bg-accent/5 transition-colors"
             >
               <div className="text-center">
@@ -2336,6 +2361,84 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
             </button>
           </div>
         </div>
+
+        {/* 新增項目彈窗 */}
+        {showAddItemModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden">
+              <div className="p-4 border-b border-gray-100">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-bold text-textMain">新增項目</h3>
+                  <button
+                    onClick={() => {
+                      setShowAddItemModal(false);
+                      setNewItemTitle('');
+                      setNewItemImage(null);
+                    }}
+                    className="p-1 rounded-lg hover:bg-gray-100"
+                  >
+                    <X size={20} className="text-textSub" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="p-4 space-y-4">
+                {/* 照片上傳 */}
+                <div>
+                  <label className="text-sm text-textSub mb-2 block">照片（選填）</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    ref={newItemImageRef}
+                    onChange={handleItemImageUpload}
+                    className="hidden"
+                  />
+                  {newItemImage ? (
+                    <div className="relative w-24 h-32 rounded-xl overflow-hidden">
+                      <img src={newItemImage} alt="預覽" className="w-full h-full object-cover" />
+                      <button
+                        onClick={() => setNewItemImage(null)}
+                        className="absolute top-1 right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center"
+                      >
+                        <X size={12} className="text-white" />
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => newItemImageRef.current?.click()}
+                      className="w-24 h-32 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center hover:border-accent hover:bg-accent/5"
+                    >
+                      <Camera size={24} className="text-gray-400 mb-1" />
+                      <span className="text-xs text-gray-400">上傳照片</span>
+                    </button>
+                  )}
+                </div>
+
+                {/* 名稱輸入 */}
+                <div>
+                  <label className="text-sm text-textSub mb-2 block">名稱</label>
+                  <input
+                    type="text"
+                    value={newItemTitle}
+                    onChange={(e) => setNewItemTitle(e.target.value)}
+                    placeholder="輸入項目名稱"
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-accent"
+                  />
+                </div>
+              </div>
+
+              <div className="p-4 border-t border-gray-100">
+                <button
+                  onClick={handleAddItem}
+                  disabled={!newItemTitle.trim()}
+                  className="w-full py-3 bg-accent text-white rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  確認新增
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   };
