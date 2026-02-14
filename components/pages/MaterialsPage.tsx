@@ -1553,7 +1553,7 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
                     />
                   </div>
                 </>
-              ) : selectedMaterial.isTool ? (
+              ) : (selectedMaterial.isTool || prebuiltTools.some(t => t.id === selectedMaterial.id) || selectedMaterial.id.startsWith('luk_') || selectedMaterial.id.startsWith('smart_games_') || selectedMaterial.id.startsWith('learning_resources_') || selectedMaterial.id.startsWith('康軒桌遊')) ? (
                 // 教具：顯示能力紀錄
                 <div>
                   <div className="flex items-center justify-between mb-2">
