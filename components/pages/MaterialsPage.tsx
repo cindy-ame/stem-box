@@ -181,6 +181,8 @@ interface UserMaterial {
   progress: number; // 套書：已學習本數
   readCount: number; // 單本書：閱讀次數
   coverImage?: string; // 封面圖片路徑
+  abilityNote?: string; // 教具：能力紀錄
+  isTool?: boolean; // 是否為教具
 }
 
 // 篩選用的分類選項
@@ -239,6 +241,10 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
   const [newItemTitle, setNewItemTitle] = useState('');
   const [newItemImage, setNewItemImage] = useState<string | null>(null);
   const newItemImageRef = useRef<HTMLInputElement>(null);
+
+  // 能力紀錄編輯
+  const [isEditingAbility, setIsEditingAbility] = useState(false);
+  const [abilityNoteInput, setAbilityNoteInput] = useState('');
 
   // 自訂語言子分類
   const [customLanguages, setCustomLanguages] = useState<{ id: string; label: string }[]>([]);
@@ -393,6 +399,9 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
       return;
     }
 
+    // 判斷是否為教具
+    const isTool = prebuiltTools.some(t => t.id === material.id);
+
     const newMaterial: UserMaterial = {
       id: material.id,
       name: material.name,
@@ -406,6 +415,7 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
       isPrebuilt: true,
       progress: 0,
       readCount: 0,
+      isTool,
     };
 
     setMyMaterials([...myMaterials, newMaterial]);
@@ -431,6 +441,7 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
       isPrebuilt: false,
       progress: 0,
       readCount: 0,
+      isTool: libraryTab !== 'books', // 根據當前 tab 判斷
     };
 
     setMyMaterials([...myMaterials, newMaterial]);
@@ -1246,6 +1257,7 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
                                       isPrebuilt: true,
                                       progress: 0,
                                       readCount: 0,
+                                      isTool: true,
                                     };
                                     setMyMaterials([...myMaterials, newMaterial]);
                                   }}
@@ -1526,7 +1538,7 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
               </div>
             </div>
 
-            {/* 進度顯示 - 統一格式 */}
+            {/* 進度顯示 - 根據類型顯示不同內容 */}
             <div className="mb-4">
               {selectedMaterial.totalItems > 1 ? (
                 <>
@@ -1541,7 +1553,63 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
                     />
                   </div>
                 </>
+              ) : selectedMaterial.isTool ? (
+                // 教具：顯示能力紀錄
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-textSub">能力紀錄</span>
+                    {!isEditingAbility && (
+                      <button
+                        onClick={() => {
+                          setIsEditingAbility(true);
+                          setAbilityNoteInput(selectedMaterial.abilityNote || '');
+                        }}
+                        className="text-xs text-accent"
+                      >
+                        {selectedMaterial.abilityNote ? '編輯' : '新增'}
+                      </button>
+                    )}
+                  </div>
+                  {isEditingAbility ? (
+                    <div className="space-y-2">
+                      <textarea
+                        value={abilityNoteInput}
+                        onChange={(e) => setAbilityNoteInput(e.target.value)}
+                        placeholder="例如：可以獨立完成初階圖卡、需要提示才能完成進階題目..."
+                        className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-accent resize-none"
+                        rows={3}
+                      />
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => {
+                            // 儲存能力紀錄
+                            const updatedMaterials = myMaterials.map(m =>
+                              m.id === selectedMaterial.id ? { ...m, abilityNote: abilityNoteInput } : m
+                            );
+                            setMyMaterials(updatedMaterials);
+                            setSelectedMaterial({ ...selectedMaterial, abilityNote: abilityNoteInput });
+                            setIsEditingAbility(false);
+                          }}
+                          className="flex-1 py-2 bg-accent text-white rounded-lg text-sm font-medium"
+                        >
+                          儲存
+                        </button>
+                        <button
+                          onClick={() => setIsEditingAbility(false)}
+                          className="px-4 py-2 bg-gray-100 text-textSub rounded-lg text-sm"
+                        >
+                          取消
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-textMain bg-amber-50 rounded-xl p-3 border border-amber-100">
+                      {selectedMaterial.abilityNote || '尚未記錄，點擊「新增」來記錄孩子的學習狀態'}
+                    </p>
+                  )}
+                </div>
               ) : (
+                // 書籍：顯示閱讀次數
                 <div className="flex items-center gap-2 text-sm">
                   <span className="text-textSub">閱讀次數</span>
                   <span className="font-medium text-accent">{selectedMaterial.readCount} 次</span>
