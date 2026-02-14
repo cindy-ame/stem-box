@@ -1883,8 +1883,8 @@ export default function MaterialsPage({ onBack }: MaterialsPageProps) {
 
           {/* 新增配對彈窗 */}
           {showAddPairing && selectedMaterial && (
-            <div className="fixed inset-0 bg-black/50 flex items-end justify-center z-50">
-              <div className="bg-white w-full max-w-md rounded-t-2xl p-5 max-h-[70vh] overflow-y-auto">
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white w-full max-w-md rounded-2xl p-5 max-h-[70vh] overflow-y-auto">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-base font-bold text-textMain">
                     {pairingStep === 'selectSet' ? '選擇要配對的教材' :
