@@ -5,103 +5,101 @@ interface WeekPlanPageProps {
   onBack: () => void;
 }
 
-// 每日學習資料
+// 每日學習資料（第 2 週：2/10-2/16，主題：顏色、數字）
 const dailyPlans = [
   {
     dayOfWeek: 1,
     label: '一',
-    date: '2/3',
-    theme: '農場動物',
-    sentence: 'We see a ___.',
-    vocabulary: ['cow', 'pig', 'horse', 'sheep'],
-    tip: '共讀時指著動物問「What do we see?」讓孩子回答「We see a cow!」',
+    date: '2/10',
+    theme: '認識顏色',
+    sentence: 'I see ___.',
+    vocabulary: ['red', 'blue', 'yellow', 'green'],
+    tip: '指著物品問「What color is it?」讓孩子回答「It is red!」',
     tasks: [
-      { type: 'read', title: '共讀 Animals on the Farm', duration: '10分鐘' },
-      { type: 'listen', title: '播放 JPR Cc 音檔', duration: '5分鐘' },
+      { type: 'read', title: '共讀 Colors Everywhere', duration: '10分鐘' },
+      { type: 'listen', title: '播放 Color Song', duration: '5分鐘' },
     ],
     completed: true,
   },
   {
     dayOfWeek: 2,
     label: '二',
-    date: '2/4',
-    theme: '農場動物',
-    sentence: 'The ___ can ___.',
-    vocabulary: ['run', 'jump', 'swim', 'fly'],
-    tip: '模仿動物動作，邊做邊說「The horse can run!」增加身體記憶',
+    date: '2/11',
+    theme: '認識顏色',
+    sentence: 'The ___ is ___.',
+    vocabulary: ['orange', 'purple', 'pink', 'brown'],
+    tip: '用彩色積木玩配對：「Find the blue one!」',
     tasks: [
-      { type: 'read', title: '再讀 Animals on the Farm', duration: '10分鐘' },
-      { type: 'read', title: '配對書 What Can I See?', duration: '10分鐘' },
-      { type: 'play', title: '動物動作模仿遊戲', duration: '5分鐘' },
+      { type: 'read', title: '再讀 Colors Everywhere', duration: '10分鐘' },
+      { type: 'play', title: '顏色配對遊戲', duration: '10分鐘' },
     ],
     completed: true,
   },
   {
     dayOfWeek: 3,
     label: '三',
-    date: '2/5',
-    theme: '形狀認識',
-    sentence: 'I see a ___.',
-    vocabulary: ['circle', 'square', 'triangle', 'star'],
-    tip: '在家中找形狀：「Can you find a circle?」讓孩子指出圓形物品',
+    date: '2/12',
+    theme: '認識數字',
+    sentence: 'I have ___ ___.',
+    vocabulary: ['one', 'two', 'three', 'four', 'five'],
+    tip: '數玩具時說「I have three cars!」讓孩子跟著數',
     tasks: [
-      { type: 'read', title: '共讀 Look at the Shapes', duration: '10分鐘' },
-      { type: 'review', title: '複習 Animals on the Farm', duration: '5分鐘' },
-      { type: 'listen', title: '播放 JPR Ss 音檔', duration: '5分鐘' },
+      { type: 'read', title: '共讀 Counting Fun', duration: '10分鐘' },
+      { type: 'review', title: '複習 Colors Everywhere', duration: '5分鐘' },
+      { type: 'listen', title: '播放 Number Song', duration: '5分鐘' },
     ],
-    completed: false,
+    completed: true,
   },
   {
     dayOfWeek: 4,
     label: '四',
-    date: '2/6',
-    theme: '形狀認識',
-    sentence: 'The ___ is ___.',
-    vocabulary: ['big', 'small', 'red', 'blue'],
-    tip: '用積木或貼紙玩顏色形狀配對：「The circle is red!」',
+    date: '2/13',
+    theme: '認識數字',
+    sentence: 'How many ___?',
+    vocabulary: ['six', 'seven', 'eight', 'nine', 'ten'],
+    tip: '問孩子「How many apples?」讓他數數看並回答',
     tasks: [
-      { type: 'read', title: '再讀 Look at the Shapes', duration: '10分鐘' },
-      { type: 'read', title: '配對書 Shapes for Lunch', duration: '10分鐘' },
-      { type: 'play', title: '形狀貼紙畫', duration: '10分鐘' },
+      { type: 'read', title: '再讀 Counting Fun', duration: '10分鐘' },
+      { type: 'play', title: '數數遊戲', duration: '10分鐘' },
     ],
-    completed: false,
+    completed: true,
   },
   {
     dayOfWeek: 5,
     label: '五',
-    date: '2/7',
+    date: '2/14',
     theme: '綜合複習',
-    sentence: 'We see some ___.',
-    vocabulary: ['animals', 'shapes', 'colors'],
-    tip: '結合本週學習，外出時說「We see some birds! They can fly!」',
+    sentence: 'I see ___ ___ ___.',
+    vocabulary: ['colors', 'numbers'],
+    tip: '結合顏色和數字：「I see three red apples!」',
     tasks: [
-      { type: 'review', title: '複習兩本主教材', duration: '15分鐘' },
-      { type: 'listen', title: '播放 JPR Pp 音檔', duration: '5分鐘' },
+      { type: 'review', title: '複習顏色和數字', duration: '15分鐘' },
+      { type: 'listen', title: '播放 JPR Nn 音檔', duration: '5分鐘' },
     ],
     completed: false,
   },
   {
     dayOfWeek: 6,
     label: '六',
-    date: '2/8',
+    date: '2/15',
     theme: '遊戲日',
-    sentence: 'Where is the ___?',
-    vocabulary: ['farm', 'animal', 'shape'],
-    tip: '玩捉迷藏遊戲，藏動物玩具問「Where is the cow?」',
+    sentence: 'What color? How many?',
+    vocabulary: [],
+    tip: '玩尋寶遊戲：「Find two blue things!」',
     tasks: [
-      { type: 'play', title: '農場動物配對遊戲', duration: '15分鐘' },
-      { type: 'play', title: '形狀捉迷藏', duration: '10分鐘' },
+      { type: 'play', title: '顏色數字尋寶', duration: '15分鐘' },
+      { type: 'play', title: '彩虹塗鴉', duration: '10分鐘' },
     ],
     completed: false,
   },
   {
     dayOfWeek: 7,
     label: '日',
-    date: '2/9',
+    date: '2/16',
     theme: '自由選擇',
     sentence: '複習本週句型',
     vocabulary: [],
-    tip: '讓孩子選擇最喜歡的書再讀一次，增強自主學習動機',
+    tip: '讓孩子選擇最喜歡的書再讀一次',
     tasks: [
       { type: 'play', title: '孩子自由選擇活動', duration: '自由' },
     ],
@@ -109,8 +107,8 @@ const dailyPlans = [
   },
 ];
 
-// 打卡紀錄（範例資料）
-const checkInRecords = [3, 4, 5, 10, 11, 12, 13, 17, 18, 19, 24, 25]; // 二月份有打卡的日期
+// 打卡紀錄（範例資料 - 2/14 之前有打卡的日期）
+const checkInRecords = [3, 4, 5, 6, 7, 8, 10, 11, 12, 13]; // 二月份有打卡的日期
 
 const taskTypeConfig: Record<string, { bg: string; text: string; icon: React.ReactNode }> = {
   read: { bg: 'bg-blue-50', text: 'text-blue-600', icon: <BookOpen size={14} /> },
@@ -120,11 +118,11 @@ const taskTypeConfig: Record<string, { bg: string; text: string; icon: React.Rea
 };
 
 export default function WeekPlanPage({ onBack }: WeekPlanPageProps) {
-  const [expandedDay, setExpandedDay] = useState<number | null>(3);
+  const [expandedDay, setExpandedDay] = useState<number | null>(5); // 預設展開今天（週五）
   const [showWeekPicker, setShowWeekPicker] = useState(false);
   const [showCheckInRecord, setShowCheckInRecord] = useState(false);
-  const [selectedWeek, setSelectedWeek] = useState(1);
-  const today = new Date().getDay() || 7;
+  const [selectedWeek, setSelectedWeek] = useState(2); // 預設顯示本週（第2週）
+  const today = 5; // 今天是週五（2/14）
 
   const completedDays = dailyPlans.filter(d => d.completed).length;
   const progressPercent = (completedDays / 7) * 100;
@@ -150,9 +148,9 @@ export default function WeekPlanPage({ onBack }: WeekPlanPageProps) {
   const calendarDays = generateCalendarDays(2026, 1); // 2026年2月
 
   // 週資料（範例）
-  const currentWeek = 1; // 當週是第幾週（之後從日期計算）
+  const currentWeek = 2; // 當週是第幾週（2/14 是第 2 週）
   const weeks = [
-    { week: 1, startDate: '2/3', endDate: '2/9', themes: ['農場動物', '形狀'], completed: false },
+    { week: 1, startDate: '2/3', endDate: '2/9', themes: ['農場動物', '形狀'], completed: true },
     { week: 2, startDate: '2/10', endDate: '2/16', themes: ['顏色', '數字'], completed: false },
     { week: 3, startDate: '2/17', endDate: '2/23', themes: ['家庭', '食物'], completed: false },
     { week: 4, startDate: '2/24', endDate: '3/2', themes: ['交通工具', '天氣'], completed: false },
@@ -434,7 +432,7 @@ export default function WeekPlanPage({ onBack }: WeekPlanPageProps) {
               <div className="grid grid-cols-7 gap-1">
                 {calendarDays.map((day, idx) => {
                   const hasCheckIn = day && checkInRecords.includes(day);
-                  const isCurrentDay = day === 14; // 假設今天是14號
+                  const isCurrentDay = day === 14; // 今天是 2/14
 
                   return (
                     <div
