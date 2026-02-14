@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, ChevronDown, BookOpen, Headphones, Gamepad2, RotateCcw, Sparkles, Check, Target, Calendar, Flame, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, BookOpen, Headphones, Gamepad2, RotateCcw, Sparkles, Check, Target, Calendar, Flame, X } from 'lucide-react';
 
 interface WeekPlanPageProps {
   onBack: () => void;
@@ -10,7 +10,8 @@ const dailyPlans = [
   {
     dayOfWeek: 1,
     label: '一',
-    date: '2/10',
+    date: '10',
+    fullDate: '2/10',
     theme: '認識顏色',
     sentence: 'I see ___.',
     vocabulary: ['red', 'blue', 'yellow', 'green'],
@@ -24,7 +25,8 @@ const dailyPlans = [
   {
     dayOfWeek: 2,
     label: '二',
-    date: '2/11',
+    date: '11',
+    fullDate: '2/11',
     theme: '認識顏色',
     sentence: 'The ___ is ___.',
     vocabulary: ['orange', 'purple', 'pink', 'brown'],
@@ -38,7 +40,8 @@ const dailyPlans = [
   {
     dayOfWeek: 3,
     label: '三',
-    date: '2/12',
+    date: '12',
+    fullDate: '2/12',
     theme: '認識數字',
     sentence: 'I have ___ ___.',
     vocabulary: ['one', 'two', 'three', 'four', 'five'],
@@ -53,7 +56,8 @@ const dailyPlans = [
   {
     dayOfWeek: 4,
     label: '四',
-    date: '2/13',
+    date: '13',
+    fullDate: '2/13',
     theme: '認識數字',
     sentence: 'How many ___?',
     vocabulary: ['six', 'seven', 'eight', 'nine', 'ten'],
@@ -67,7 +71,8 @@ const dailyPlans = [
   {
     dayOfWeek: 5,
     label: '五',
-    date: '2/14',
+    date: '14',
+    fullDate: '2/14',
     theme: '綜合複習',
     sentence: 'I see ___ ___ ___.',
     vocabulary: ['colors', 'numbers'],
@@ -81,7 +86,8 @@ const dailyPlans = [
   {
     dayOfWeek: 6,
     label: '六',
-    date: '2/15',
+    date: '15',
+    fullDate: '2/15',
     theme: '遊戲日',
     sentence: 'What color? How many?',
     vocabulary: [],
@@ -95,7 +101,8 @@ const dailyPlans = [
   {
     dayOfWeek: 7,
     label: '日',
-    date: '2/16',
+    date: '16',
+    fullDate: '2/16',
     theme: '自由選擇',
     sentence: '複習本週句型',
     vocabulary: [],
@@ -107,48 +114,29 @@ const dailyPlans = [
   },
 ];
 
-// 打卡紀錄（範例資料 - 2/14 之前有打卡的日期）
-const checkInRecords = [3, 4, 5, 6, 7, 8, 10, 11, 12, 13]; // 二月份有打卡的日期
+// 打卡紀錄（範例資料）
+const checkInRecords = [3, 4, 5, 6, 7, 8, 10, 11, 12, 13];
 
 const taskTypeConfig: Record<string, { bg: string; text: string; icon: React.ReactNode }> = {
-  read: { bg: 'bg-blue-50', text: 'text-blue-600', icon: <BookOpen size={14} /> },
-  listen: { bg: 'bg-purple-50', text: 'text-purple-600', icon: <Headphones size={14} /> },
-  play: { bg: 'bg-accent/10', text: 'text-accent', icon: <Gamepad2 size={14} /> },
-  review: { bg: 'bg-green-50', text: 'text-green-600', icon: <RotateCcw size={14} /> },
+  read: { bg: 'bg-blue-50', text: 'text-blue-600', icon: <BookOpen size={16} /> },
+  listen: { bg: 'bg-purple-50', text: 'text-purple-600', icon: <Headphones size={16} /> },
+  play: { bg: 'bg-accent/10', text: 'text-accent', icon: <Gamepad2 size={16} /> },
+  review: { bg: 'bg-green-50', text: 'text-green-600', icon: <RotateCcw size={16} /> },
 };
 
 export default function WeekPlanPage({ onBack }: WeekPlanPageProps) {
-  const [expandedDay, setExpandedDay] = useState<number | null>(5); // 預設展開今天（週五）
+  const [selectedDay, setSelectedDay] = useState(5); // 預設選擇今天（週五）
   const [showWeekPicker, setShowWeekPicker] = useState(false);
   const [showCheckInRecord, setShowCheckInRecord] = useState(false);
-  const [selectedWeek, setSelectedWeek] = useState(2); // 預設顯示本週（第2週）
-  const today = 5; // 今天是週五（2/14）
+  const [selectedWeek, setSelectedWeek] = useState(2);
+  const today = 5; // 今天是週五
 
+  const currentDay = dailyPlans[selectedDay - 1];
   const completedDays = dailyPlans.filter(d => d.completed).length;
-  const progressPercent = (completedDays / 7) * 100;
-  const streakDays = 5; // 連續打卡天數（之後從資料庫取）
+  const streakDays = 5;
 
-  // 生成月曆資料
-  const generateCalendarDays = (year: number, month: number) => {
-    const firstDay = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const days = [];
-
-    // 填充前面的空白
-    for (let i = 0; i < firstDay; i++) {
-      days.push(null);
-    }
-    // 填充日期
-    for (let i = 1; i <= daysInMonth; i++) {
-      days.push(i);
-    }
-    return days;
-  };
-
-  const calendarDays = generateCalendarDays(2026, 1); // 2026年2月
-
-  // 週資料（範例）
-  const currentWeek = 2; // 當週是第幾週（2/14 是第 2 週）
+  // 週資料
+  const currentWeek = 2;
   const weeks = [
     { week: 1, startDate: '2/3', endDate: '2/9', themes: ['農場動物', '形狀'], completed: true },
     { week: 2, startDate: '2/10', endDate: '2/16', themes: ['顏色', '數字'], completed: false },
@@ -156,8 +144,19 @@ export default function WeekPlanPage({ onBack }: WeekPlanPageProps) {
     { week: 4, startDate: '2/24', endDate: '3/2', themes: ['交通工具', '天氣'], completed: false },
   ];
 
+  // 生成月曆
+  const generateCalendarDays = (year: number, month: number) => {
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const days = [];
+    for (let i = 0; i < firstDay; i++) days.push(null);
+    for (let i = 1; i <= daysInMonth; i++) days.push(i);
+    return days;
+  };
+  const calendarDays = generateCalendarDays(2026, 1);
+
   return (
-    <div className="pb-20 bg-white">
+    <div className="pb-20 bg-white min-h-screen">
       {/* Header */}
       <div className="bg-white border-b border-gray-100">
         <div className="flex items-center p-4">
@@ -165,7 +164,7 @@ export default function WeekPlanPage({ onBack }: WeekPlanPageProps) {
             <ChevronLeft size={24} className="text-textMain" />
           </button>
           <div className="flex-1">
-            <h1 className="text-lg font-bold text-textMain">第 {selectedWeek} 週學習計畫</h1>
+            <h1 className="text-lg font-bold text-textMain">第 {selectedWeek} 週</h1>
             <p className="text-xs text-textSub">{weeks[selectedWeek - 1]?.startDate} - {weeks[selectedWeek - 1]?.endDate}</p>
           </div>
           <button
@@ -177,148 +176,132 @@ export default function WeekPlanPage({ onBack }: WeekPlanPageProps) {
         </div>
       </div>
 
-      {/* 週進度總覽 + 打卡連續 */}
-      <div className="p-4 bg-gradient-to-r from-accent/10 to-amber-50">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <Target size={18} className="text-accent" />
-            <span className="text-sm font-medium text-textMain">本週進度</span>
-          </div>
-          <span className="text-sm font-bold text-accent">{completedDays}/7 天</span>
-        </div>
-        <div className="w-full bg-white rounded-full h-2.5 mb-3">
-          <div
-            className="bg-accent rounded-full h-2.5 transition-all"
-            style={{ width: `${progressPercent}%` }}
-          />
-        </div>
-
-        {/* 連續打卡 + 查看紀錄 */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1 bg-orange-100 text-orange-600 px-2.5 py-1 rounded-full">
-              <Flame size={14} />
-              <span className="text-xs font-bold">連續 {streakDays} 天</span>
-            </div>
-            <span className="bg-white px-3 py-1 rounded-full text-xs font-medium text-accent shadow-sm">
-              {weeks[selectedWeek - 1]?.themes[0]}
-            </span>
-            <span className="bg-white px-3 py-1 rounded-full text-xs font-medium text-accent shadow-sm">
-              {weeks[selectedWeek - 1]?.themes[1]}
-            </span>
-          </div>
-          <button
-            onClick={() => setShowCheckInRecord(true)}
-            className="text-xs text-accent font-medium"
-          >
-            打卡紀錄
-          </button>
-        </div>
-      </div>
-
-      {/* 每日計畫列表 */}
-      <div className="p-4">
-        <h2 className="text-base font-bold text-textMain mb-3">每日安排</h2>
-        <div className="space-y-3">
+      {/* 日期選擇器 */}
+      <div className="bg-gradient-to-r from-accent/10 to-amber-50 px-2 py-3">
+        <div className="flex justify-between items-center">
           {dailyPlans.map((day) => {
-            const isExpanded = expandedDay === day.dayOfWeek;
+            const isSelected = selectedDay === day.dayOfWeek;
             const isToday = day.dayOfWeek === today;
 
             return (
-              <div
+              <button
                 key={day.dayOfWeek}
-                className={`rounded-2xl border overflow-hidden transition-all ${
-                  isToday ? 'border-accent bg-accent/5' : 'border-amber-100 bg-cardBgSoft'
+                onClick={() => setSelectedDay(day.dayOfWeek)}
+                className={`flex flex-col items-center py-2 px-3 rounded-xl transition-all ${
+                  isSelected
+                    ? 'bg-accent text-white shadow-md'
+                    : 'hover:bg-white/50'
                 }`}
               >
-                {/* 日期標題列 */}
-                <button
-                  onClick={() => setExpandedDay(isExpanded ? null : day.dayOfWeek)}
-                  className="w-full p-4 flex items-center gap-3"
-                >
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${
-                    day.completed
-                      ? 'bg-accent text-white'
-                      : isToday
-                      ? 'bg-accent/20 text-accent border-2 border-accent'
-                      : 'bg-white text-textSub border border-gray-200'
-                  }`}>
-                    {day.completed ? <Check size={18} /> : day.label}
-                  </div>
-                  <div className="flex-1 text-left">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-textMain">
-                        週{day.label} {day.date}
-                      </span>
-                      {isToday && (
-                        <span className="text-xs bg-accent text-white px-2 py-0.5 rounded-full">
-                          今天
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-xs text-textSub mt-0.5">{day.theme} · {day.tasks.length} 個活動</p>
-                  </div>
-                  <ChevronDown
-                    size={20}
-                    className={`text-textSub transition-transform ${isExpanded ? 'rotate-180' : ''}`}
-                  />
-                </button>
-
-                {/* 展開內容 */}
-                {isExpanded && (
-                  <div className="px-4 pb-4 space-y-4">
-                    {/* 今日句型 */}
-                    <div className="bg-white rounded-xl p-3 border border-gray-100">
-                      <p className="text-xs text-textSub mb-1">今日句型</p>
-                      <p className="text-base font-bold text-accent">"{day.sentence}"</p>
-                      {day.vocabulary.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 mt-2">
-                          {day.vocabulary.map(word => (
-                            <span key={word} className="text-xs bg-accent/10 text-accent px-2 py-0.5 rounded-full">
-                              {word}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* 親子互動提示 */}
-                    <div className="flex items-start gap-2 bg-amber-50 rounded-xl p-3">
-                      <Sparkles size={16} className="text-accent flex-shrink-0 mt-0.5" />
-                      <div>
-                        <p className="text-xs font-medium text-textMain mb-0.5">親子互動提示</p>
-                        <p className="text-xs text-textSub leading-relaxed">{day.tip}</p>
-                      </div>
-                    </div>
-
-                    {/* 任務列表 */}
-                    <div>
-                      <p className="text-xs text-textSub mb-2">今日活動</p>
-                      <div className="space-y-2">
-                        {day.tasks.map((task, idx) => {
-                          const config = taskTypeConfig[task.type];
-                          return (
-                            <div key={idx} className="flex items-center gap-3 bg-white rounded-xl p-3 border border-gray-100">
-                              <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${config.bg} ${config.text}`}>
-                                {config.icon}
-                              </div>
-                              <div className="flex-1">
-                                <p className="text-sm font-medium text-textMain">{task.title}</p>
-                                <p className="text-xs text-textSub">{task.duration}</p>
-                              </div>
-                              {day.completed && (
-                                <Check size={18} className="text-accent" />
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </div>
+                <span className={`text-xs ${isSelected ? 'text-white/80' : 'text-textSub'}`}>
+                  {day.label}
+                </span>
+                <span className={`text-lg font-bold ${isSelected ? 'text-white' : 'text-textMain'}`}>
+                  {day.date}
+                </span>
+                {day.completed ? (
+                  <div className={`w-1.5 h-1.5 rounded-full mt-1 ${isSelected ? 'bg-white' : 'bg-accent'}`} />
+                ) : isToday ? (
+                  <div className={`w-1.5 h-1.5 rounded-full mt-1 ${isSelected ? 'bg-white' : 'bg-orange-400'}`} />
+                ) : (
+                  <div className="w-1.5 h-1.5 mt-1" />
                 )}
-              </div>
+              </button>
             );
           })}
+        </div>
+      </div>
+
+      {/* 進度條 + 連續打卡 */}
+      <div className="px-4 py-3 flex items-center justify-between border-b border-gray-100">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1 bg-orange-100 text-orange-600 px-2 py-1 rounded-full">
+            <Flame size={14} />
+            <span className="text-xs font-bold">連續 {streakDays} 天</span>
+          </div>
+          <span className="text-xs text-textSub">{completedDays}/7 天完成</span>
+        </div>
+        <button
+          onClick={() => setShowCheckInRecord(true)}
+          className="text-xs text-accent font-medium"
+        >
+          打卡紀錄
+        </button>
+      </div>
+
+      {/* 當日內容 */}
+      <div className="p-4 space-y-4">
+        {/* 日期標題 */}
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-2">
+              <h2 className="text-xl font-bold text-textMain">
+                {currentDay.fullDate} 週{currentDay.label}
+              </h2>
+              {currentDay.dayOfWeek === today && (
+                <span className="text-xs bg-accent text-white px-2 py-0.5 rounded-full">今天</span>
+              )}
+              {currentDay.completed && (
+                <span className="text-xs bg-green-100 text-green-600 px-2 py-0.5 rounded-full">已完成</span>
+              )}
+            </div>
+            <p className="text-sm text-textSub mt-0.5">{currentDay.theme}</p>
+          </div>
+        </div>
+
+        {/* 今日句型 */}
+        <div className="bg-cardBgSoft rounded-2xl p-4 border border-amber-100">
+          <p className="text-xs text-textSub mb-2">今日句型</p>
+          <p className="text-xl font-bold text-accent">"{currentDay.sentence}"</p>
+          {currentDay.vocabulary.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-3">
+              {currentDay.vocabulary.map(word => (
+                <span key={word} className="text-sm bg-white text-accent px-3 py-1 rounded-full border border-accent/20">
+                  {word}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* 親子互動提示 */}
+        <div className="bg-amber-50 rounded-2xl p-4 border border-amber-100">
+          <div className="flex items-start gap-3">
+            <div className="w-8 h-8 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0">
+              <Sparkles size={16} className="text-accent" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-textMain mb-1">親子互動提示</p>
+              <p className="text-sm text-textSub leading-relaxed">{currentDay.tip}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* 今日活動 */}
+        <div>
+          <h3 className="text-base font-bold text-textMain mb-3">今日活動</h3>
+          <div className="space-y-2">
+            {currentDay.tasks.map((task, idx) => {
+              const config = taskTypeConfig[task.type];
+              return (
+                <div
+                  key={idx}
+                  className="flex items-center gap-3 bg-white rounded-xl p-4 border border-gray-100 shadow-sm"
+                >
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${config.bg} ${config.text}`}>
+                    {config.icon}
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-textMain">{task.title}</p>
+                    <p className="text-xs text-textSub">{task.duration}</p>
+                  </div>
+                  {currentDay.completed && (
+                    <Check size={20} className="text-accent" />
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -351,9 +334,7 @@ export default function WeekPlanPage({ onBack }: WeekPlanPageProps) {
                       <div className="flex items-center gap-2">
                         <p className="font-medium text-textMain">第 {w.week} 週</p>
                         {w.week === currentWeek && (
-                          <span className="text-xs bg-accent text-white px-2 py-0.5 rounded-full">
-                            本週
-                          </span>
+                          <span className="text-xs bg-accent text-white px-2 py-0.5 rounded-full">本週</span>
                         )}
                       </div>
                       <p className="text-xs text-textSub">{w.startDate} - {w.endDate}</p>
@@ -384,7 +365,6 @@ export default function WeekPlanPage({ onBack }: WeekPlanPageProps) {
               </button>
             </div>
 
-            {/* 統計 */}
             <div className="p-4 bg-gradient-to-r from-accent/10 to-amber-50">
               <div className="flex items-center justify-around">
                 <div className="text-center">
@@ -407,7 +387,6 @@ export default function WeekPlanPage({ onBack }: WeekPlanPageProps) {
               </div>
             </div>
 
-            {/* 月曆 */}
             <div className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <button className="p-1 rounded hover:bg-gray-100">
@@ -419,32 +398,21 @@ export default function WeekPlanPage({ onBack }: WeekPlanPageProps) {
                 </button>
               </div>
 
-              {/* 星期標題 */}
               <div className="grid grid-cols-7 gap-1 mb-2">
                 {['日', '一', '二', '三', '四', '五', '六'].map(d => (
-                  <div key={d} className="text-center text-xs text-textSub py-1">
-                    {d}
-                  </div>
+                  <div key={d} className="text-center text-xs text-textSub py-1">{d}</div>
                 ))}
               </div>
 
-              {/* 日期 */}
               <div className="grid grid-cols-7 gap-1">
                 {calendarDays.map((day, idx) => {
                   const hasCheckIn = day && checkInRecords.includes(day);
-                  const isCurrentDay = day === 14; // 今天是 2/14
-
+                  const isCurrentDay = day === 14;
                   return (
                     <div
                       key={idx}
                       className={`aspect-square flex items-center justify-center text-sm rounded-full ${
-                        !day
-                          ? ''
-                          : hasCheckIn
-                          ? 'bg-accent text-white font-medium'
-                          : isCurrentDay
-                          ? 'border-2 border-accent text-accent font-medium'
-                          : 'text-textSub'
+                        !day ? '' : hasCheckIn ? 'bg-accent text-white font-medium' : isCurrentDay ? 'border-2 border-accent text-accent font-medium' : 'text-textSub'
                       }`}
                     >
                       {day}
