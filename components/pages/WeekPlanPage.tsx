@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, BookOpen, Headphones, Gamepad2, RotateCcw, Lightbulb } from 'lucide-react';
+import { ChevronLeft, ChevronRight, BookOpen, Headphones, Gamepad2, RotateCcw, Lightbulb, Sparkles, Book } from 'lucide-react';
 
 interface WeekPlanPageProps {
   onBack: () => void;
@@ -171,29 +171,42 @@ export default function WeekPlanPage({ onBack }: WeekPlanPageProps) {
         </div>
       </div>
 
-      {/* 本週 Sight Words */}
+      {/* 今日學習重點 */}
       <div className="px-4 pb-4">
-        <h2 className="text-base font-bold text-textMain mb-3">本週 Sight Words</h2>
-        <div className="flex flex-wrap gap-2">
-          {weekPlan.sightWords.map((word) => (
-            <span
-              key={word}
-              className="bg-accent/10 text-accent px-3 py-1.5 rounded-full text-sm font-semibold"
-            >
-              {word}
-            </span>
-          ))}
-        </div>
-      </div>
+        <h2 className="text-base font-bold text-textMain mb-3">今日學習重點</h2>
+        <div className="bg-cardBgSoft rounded-2xl p-4 border border-amber-100 space-y-3">
+          {/* 今日句型 */}
+          <div>
+            <p className="text-xs text-textSub mb-1">今日句型</p>
+            <p className="text-lg font-bold text-accent">"We see some ___."</p>
+          </div>
 
-      {/* AI 小提示 */}
-      <div className="mx-4 mb-4 bg-cardBgSoft rounded-2xl p-4 border border-amber-100">
-        <div className="flex items-start gap-2">
-          <Lightbulb size={18} className="text-accent flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-textMain">
-            <span className="font-medium">小提示：</span>
-            <span className="text-textSub"> 這週結合動物與形狀，建議共讀時多問「Where are the ___?」</span>
-          </p>
+          {/* 引導建議 */}
+          <div className="pt-2 border-t border-amber-100">
+            <div className="flex items-start gap-2">
+              <Sparkles className="text-accent flex-shrink-0 mt-0.5" size={16} />
+              <div>
+                <p className="text-sm text-textMain font-medium mb-1">親子互動小提示</p>
+                <p className="text-xs text-textSub leading-relaxed">
+                  帶孩子外出時，指著看到的東西說「We see some birds!」、「We see some cars!」，讓孩子跟著複述並替換最後的單字。
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* 相關書籍 */}
+          <div className="pt-2 border-t border-amber-100">
+            <p className="text-xs text-textSub mb-1.5">今日搭配教材</p>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-10 bg-amber-100 rounded flex items-center justify-center">
+                <Book size={14} className="text-accent" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-textMain">JYSW #3 We See</p>
+                <p className="text-xs text-textSub">Sight Words: we, see, some</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
