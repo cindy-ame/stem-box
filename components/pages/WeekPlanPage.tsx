@@ -150,6 +150,7 @@ export default function WeekPlanPage({ onBack }: WeekPlanPageProps) {
   const calendarDays = generateCalendarDays(2026, 1); // 2026年2月
 
   // 週資料（範例）
+  const currentWeek = 1; // 當週是第幾週（之後從日期計算）
   const weeks = [
     { week: 1, startDate: '2/3', endDate: '2/9', themes: ['農場動物', '形狀'], completed: false },
     { week: 2, startDate: '2/10', endDate: '2/16', themes: ['顏色', '數字'], completed: false },
@@ -349,7 +350,14 @@ export default function WeekPlanPage({ onBack }: WeekPlanPageProps) {
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium text-textMain">第 {w.week} 週</p>
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium text-textMain">第 {w.week} 週</p>
+                        {w.week === currentWeek && (
+                          <span className="text-xs bg-accent text-white px-2 py-0.5 rounded-full">
+                            本週
+                          </span>
+                        )}
+                      </div>
                       <p className="text-xs text-textSub">{w.startDate} - {w.endDate}</p>
                     </div>
                     <div className="flex gap-1">
