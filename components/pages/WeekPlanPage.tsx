@@ -128,7 +128,7 @@ const activityDetails: Record<string, Omit<Task, 'type' | 'title' | 'duration'>>
       '在房間各處放置不同顏色的物品',
       '給孩子任務：「Find two blue things!」',
       '孩子找到後，一起數數量並說出顏色',
-      '可以增加難度：「Find three red and one yellow!」',
+      '可以增加難度：「Find three red things and one yellow thing!」',
     ],
     materials: ['各色玩具或物品', '小籃子收集'],
     learningGoal: '練習顏色詞彙 + 數字 1-10',
