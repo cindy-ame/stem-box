@@ -278,22 +278,6 @@ export default function WeekPlanPage({ onBack }: WeekPlanPageProps) {
         </div>
       </div>
 
-      {/* 進度條 + 連續打卡 */}
-      <div className="px-4 py-3 flex items-center justify-between border-b border-gray-100">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1 bg-orange-100 text-orange-600 px-2 py-1 rounded-full">
-            <Flame size={14} />
-            <span className="text-xs font-bold">連續 {streakDays} 天</span>
-          </div>
-          <span className="text-xs text-textSub">{completedDays}/7 天完成</span>
-        </div>
-        <button
-          onClick={() => setShowCheckInRecord(true)}
-          className="text-xs text-accent font-medium"
-        >
-          打卡紀錄
-        </button>
-      </div>
 
       {/* 當日內容 */}
       <div className="p-4 space-y-4">
