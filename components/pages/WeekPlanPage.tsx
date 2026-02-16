@@ -19,6 +19,109 @@ interface Task {
 
 // 活動詳細資料
 const activityDetails: Record<string, Omit<Task, 'type' | 'title' | 'duration'>> = {
+  // 共讀活動
+  '共讀 Colors Everywhere': {
+    description: '第一次共讀，重點在建立興趣和熟悉內容',
+    steps: [
+      '先讓孩子看封面，問「What do you see?」',
+      '慢慢翻頁，用手指著圖片說出顏色',
+      '每頁停留讓孩子觀察，不急著翻頁',
+      '讀完問孩子「Which color do you like?」',
+    ],
+    learningGoal: '認識顏色詞彙、建立閱讀興趣',
+    tip: '第一次讀不用要求孩子跟讀，讓他享受故事就好！',
+  },
+  '再讀 Colors Everywhere': {
+    description: '第二次共讀，可以增加互動和練習',
+    steps: [
+      '翻頁前問「What color is next?」讓孩子猜',
+      '指著圖片問「What color is the apple?」',
+      '讓孩子試著說出顏色：「It is red!」',
+      '可以找房間裡相同顏色的東西',
+    ],
+    learningGoal: '練習說出顏色、增加互動',
+    tip: '孩子說錯沒關係，用正確的說法重複一次即可，保持輕鬆愉快！',
+  },
+  '共讀 Counting Fun': {
+    description: '第一次共讀數字書，建立數字概念',
+    steps: [
+      '看封面問「How many ___ do you see?」',
+      '每頁一起用手指數：「One, two, three...」',
+      '讓孩子用手指點著數，建立一對一對應',
+      '數完問「How many?」讓孩子回答',
+    ],
+    learningGoal: '認識數字 1-10、練習數數',
+    tip: '數數時放慢速度，確保孩子手指和數字對應！',
+  },
+  '再讀 Counting Fun': {
+    description: '第二次共讀，讓孩子主導更多',
+    steps: [
+      '讓孩子自己翻頁，問「What do you see?」',
+      '孩子數數時，在旁邊用英文跟著數',
+      '試著讓孩子獨立說「I have three apples!」',
+      '可以問「Show me five fingers!」做延伸',
+    ],
+    learningGoal: '獨立數數、說出數量',
+    tip: '讓孩子當小老師教爸媽數數，增加成就感！',
+  },
+  // 複習活動
+  '複習 Colors Everywhere': {
+    description: '快速複習，鞏固顏色詞彙',
+    steps: [
+      '快速翻閱，每頁問「What color?」',
+      '讓孩子搶答，答對給予鼓勵',
+      '找出孩子最喜歡的那一頁多停留',
+      '結束時說「Good job! You know all the colors!」',
+    ],
+    learningGoal: '鞏固顏色詞彙記憶',
+    tip: '複習時間短，保持節奏輕快有趣！',
+  },
+  '複習顏色和數字': {
+    description: '綜合複習本週學習內容',
+    steps: [
+      '拿出房間裡的物品，問「What color?」',
+      '再問「How many?」讓孩子數數',
+      '玩快問快答：「Show me something blue!」',
+      '結合句型：「I see two red cars!」',
+    ],
+    learningGoal: '綜合運用顏色 + 數字',
+    tip: '可以用零食當獎勵，答對就可以吃一個！',
+  },
+  // 播放音檔
+  '播放 Color Song': {
+    description: '用歌曲加深顏色印象',
+    steps: [
+      '播放前告訴孩子「Let\'s sing about colors!」',
+      '跟著音樂一起唱、一起比動作',
+      '聽到顏色時，指著房間裡對應的東西',
+      '可以重複播放 2-3 次',
+    ],
+    learningGoal: '透過音樂記憶顏色詞彙',
+    tip: '不用要求孩子唱對每個字，跟著哼就很棒了！',
+  },
+  '播放 Number Song': {
+    description: '用歌曲練習數字',
+    steps: [
+      '播放前說「Let\'s count together!」',
+      '跟著音樂比出手指數字',
+      '唱到數字時大聲跟唱',
+      '可以站起來邊唱邊跳',
+    ],
+    learningGoal: '透過音樂記憶數字 1-10',
+    tip: '加入肢體動作，孩子會更投入！',
+  },
+  '播放 JPR Nn 音檔': {
+    description: '自然發音練習 - 字母 N',
+    steps: [
+      '先問孩子「What sound does N make?」',
+      '播放音檔，跟著唸 /n/ /n/ /n/',
+      '找出 N 開頭的單字：nose, nine, nut',
+      '讓孩子摸自己的鼻子說「nose!」',
+    ],
+    learningGoal: '認識字母 N 的發音',
+    tip: '可以玩遊戲：聽到 /n/ 的音就拍手！',
+  },
+  // 遊戲活動
   '顏色數字尋寶': {
     description: '結合顏色和數字的室內尋寶遊戲，讓孩子在探索中學習',
     steps: [
@@ -66,6 +169,17 @@ const activityDetails: Record<string, Omit<Task, 'type' | 'title' | 'duration'>>
     materials: ['積木、餅乾或小玩具'],
     learningGoal: '數字 1-10 + 句型「How many___?」',
     tip: '可以在點心時間數餅乾，增加趣味性',
+  },
+  '孩子自由選擇活動': {
+    description: '讓孩子主導，選擇想要的學習活動',
+    steps: [
+      '問孩子「What do you want to do today?」',
+      '把本週的書和活動選項展示給孩子看',
+      '讓孩子自己選擇一本書或活動',
+      '跟著孩子的節奏進行，讓他當小老師',
+    ],
+    learningGoal: '培養自主學習、複習本週內容',
+    tip: '孩子自己選的活動參與度最高！尊重他的選擇。',
   },
 };
 
