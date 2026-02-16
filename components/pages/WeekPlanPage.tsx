@@ -419,6 +419,13 @@ export default function WeekPlanPage({ onBack }: WeekPlanPageProps) {
             </div>
             <p className="text-sm text-textSub mt-0.5">{currentDay.theme}</p>
           </div>
+          <button
+            onClick={() => setShowCheckInRecord(true)}
+            className="text-sm text-accent font-medium flex items-center gap-1"
+          >
+            <Target size={16} />
+            打卡紀錄
+          </button>
         </div>
 
         {/* 今日句型 */}
