@@ -622,21 +622,40 @@ export default function WeekPlanPage({ onBack }: WeekPlanPageProps) {
 
             {/* 打卡按鈕 */}
             <div className="p-4 border-t border-gray-100 flex-shrink-0">
-              <button
-                onClick={() => {
-                  // 找到當前任務的 index
-                  const taskIdx = currentDay.tasks.findIndex(t => t.title === selectedActivity.title);
-                  if (taskIdx !== -1) {
-                    const taskKey = `${currentDay.dayOfWeek}-${taskIdx}`;
-                    setTaskCompletedState(prev => ({ ...prev, [taskKey]: true }));
-                  }
-                  setSelectedActivity(null);
-                }}
-                className="w-full py-3 bg-accent text-white rounded-xl font-medium flex items-center justify-center gap-2"
-              >
-                <Check size={18} />
-                完成打卡
-              </button>
+              {(() => {
+                const taskIdx = currentDay.tasks.findIndex(t => t.title === selectedActivity.title);
+                const taskKey = `${currentDay.dayOfWeek}-${taskIdx}`;
+                const task = currentDay.tasks[taskIdx];
+                const isCompleted = task?.completed || taskCompletedState[taskKey];
+
+                return isCompleted ? (
+                  <button
+                    onClick={() => {
+                      if (taskIdx !== -1) {
+                        setTaskCompletedState(prev => ({ ...prev, [taskKey]: false }));
+                      }
+                      setSelectedActivity(null);
+                    }}
+                    className="w-full py-3 bg-gray-100 text-textSub rounded-xl font-medium flex items-center justify-center gap-2"
+                  >
+                    <X size={18} />
+                    取消打卡
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      if (taskIdx !== -1) {
+                        setTaskCompletedState(prev => ({ ...prev, [taskKey]: true }));
+                      }
+                      setSelectedActivity(null);
+                    }}
+                    className="w-full py-3 bg-accent text-white rounded-xl font-medium flex items-center justify-center gap-2"
+                  >
+                    <Check size={18} />
+                    完成打卡
+                  </button>
+                );
+              })()}
             </div>
           </div>
         </div>
